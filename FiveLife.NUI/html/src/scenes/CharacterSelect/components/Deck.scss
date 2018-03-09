@@ -1,0 +1,23 @@
+#characterSelect {
+  ul.deck {
+    width: 200px;
+    height: 310px;
+    margin: 0 auto 30px;
+    position: relative;
+    padding: 0;
+    list-style-type: none;
+
+    li {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+      pointer-events: auto;
+      backface-visibility: hidden;
+    }
+
+  }
+}

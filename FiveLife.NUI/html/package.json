@@ -1,0 +1,32 @@
+{
+  "name": "html",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "./",
+  "dependencies": {
+    "bbcode-to-react": "^0.2.7",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.3.1",
+    "node-sass": "^4.7.2",
+    "normalize.css": "^7.0.0",
+    "object-path": "^0.11.4",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-css-modules": "^4.7.1",
+    "react-dom": "^16.2.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.17",
+    "sass-loader": "^6.0.6"
+  },
+  "scripts": {
+    "start": "node scripts/customized-config start",
+    "build": "node scripts/customized-config build",
+    "test": "node scripts/customized-config test --env=jsdom",
+    "eject": "node scripts/customized-config eject"
+  },
+  "devDependencies": {
+    "proxyquire": "^1.8.0",
+    "rewire": "^3.0.2"
+  }
+}
