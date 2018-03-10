@@ -26,8 +26,8 @@ namespace FiveLife.NUI
             Resource.resource_manifest_version = "05cfa83c-a124-4cfa-a768-c24a5811d8f9";
             Resource.ui_page = "html/index.html";
 
-            Resource.handling_files.Add("handling.meta");
-
+            Resource.data_files.Add("handling_file", "handling.meta");
+            
             Resource.client_scripts.Add("fivelife.client.net.dll");
 
             Resource.server_scripts.Add("fivelife.database.net.dll");
@@ -39,10 +39,9 @@ namespace FiveLife.NUI
 
             if (!Directory.Exists(dest))
                 Directory.CreateDirectory(dest);
-            
-            foreach(var file in Directory.GetFiles(path, "*.*", SearchOption.AllDirectories))
+
+            foreach (var file in Directory.GetFiles(path, "*.*", SearchOption.AllDirectories))
             {
-                
                 var relativePath = file.Replace(path, "");
                 relativePath = Regex.Replace(relativePath, @"\.[a-f0-9]{8}\.", ".", RegexOptions.Multiline | RegexOptions.IgnoreCase);
                 var destination = dest + relativePath;
@@ -57,7 +56,7 @@ namespace FiveLife.NUI
                 Resource.files.Add(@"html/" + relativePath.Replace(@"\", "/"));
 
                 File.WriteAllText(destination, content);
-                
+
             }
 
             File.WriteAllText(resource, Resource.ToString());

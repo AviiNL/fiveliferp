@@ -17,8 +17,8 @@ namespace FiveLife.Client.Game.ELS
 
         public static List<string> modelsWithTrafficAdvisor = new List<string>()
         {
-            "FBI2",
-            "FBI3"
+            "POLICE6",
+            "SHERIFF"
         };
 
         public static List<string> modelsWithFireSiren = new List<string>()
@@ -35,7 +35,7 @@ namespace FiveLife.Client.Game.ELS
 
         public static List<string> vehicleStageThreeAdvisor = new List<string>()
         {
-            "FBI3"
+            // "FBI3"
         };
 
         public enum Keyboard

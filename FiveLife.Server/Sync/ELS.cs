@@ -88,34 +88,48 @@ namespace FiveLife.Server.Sync
                         {
                             if (kid.Value == "grey")
                             {
-                                a.headerColor = System.Drawing.Color.FromArgb(40, 40, 40);
+                                a.headerColor_r = 40;
+                                a.headerColor_g = 40;
+                                a.headerColor_b = 40;
                             }
                             if (kid.Value == "white")
                             {
-                                a.headerColor = System.Drawing.Color.FromArgb(255, 255, 255);
+                                a.headerColor_r = 255;
+                                a.headerColor_g = 255;
+                                a.headerColor_b = 255;
                             }
                         }
                         if (kid.Name.LocalName == "InfoPanelButtonLightColor")
                         {
                             if (kid.Value == "green")
                             {
-                                a.buttonColor = System.Drawing.Color.FromArgb(0, 255, 0);
+                                a.buttonColor_r = 0;
+                                a.buttonColor_g = 255;
+                                a.buttonColor_b = 0;
                             }
                             if (kid.Value == "red")
                             {
-                                a.buttonColor = System.Drawing.Color.FromArgb(255, 0, 0);
+                                a.buttonColor_r = 255;
+                                a.buttonColor_g = 0;
+                                a.buttonColor_b = 0;
                             }
                             if (kid.Value == "blue")
                             {
-                                a.buttonColor = System.Drawing.Color.FromArgb(0, 0, 255);
+                                a.buttonColor_r = 0;
+                                a.buttonColor_g = 0;
+                                a.buttonColor_b = 255;
                             }
                             if (kid.Value == "purple")
                             {
-                                a.buttonColor = System.Drawing.Color.FromArgb(170, 0, 255);
+                                a.buttonColor_r = 270;
+                                a.buttonColor_g = 0;
+                                a.buttonColor_b = 255;
                             }
                             if (kid.Value == "orange")
                             {
-                                a.buttonColor = System.Drawing.Color.FromArgb(255, 157, 0);
+                                a.buttonColor_r = 255;
+                                a.buttonColor_g = 157;
+                                a.buttonColor_b = 0;
                             }
                         }
                     }
@@ -125,8 +139,6 @@ namespace FiveLife.Server.Sync
                     a.advisor = false;
                     foreach (var kid in el.Elements())
                     {
-                        // Extra01
-                        // if()
                         if (kid.Name.LocalName.Substring(0, kid.Name.LocalName.Length - 2).ToUpper() == "EXTRA")
                         {
                             var extra = int.Parse(kid.Name.LocalName.Substring(kid.Name.LocalName.Length - 2));
@@ -153,23 +165,34 @@ namespace FiveLife.Server.Sync
 
                                 if (kid.Attribute("Color") != null && kid.Attribute("Color").Value.ToUpper() == "RED")
                                 {
-                                    a.extras[extra].env_color = System.Drawing.Color.FromArgb(255, 0, 0);
+                                    a.extras[extra].env_color_r = 255;
+                                    a.extras[extra].env_color_g = 0;
+                                    a.extras[extra].env_color_b = 0;
                                 }
                                 else if (kid.Attribute("Color") != null && kid.Attribute("Color").Value.ToUpper() == "BLUE")
                                 {
-                                    a.extras[extra].env_color = System.Drawing.Color.FromArgb(0, 0, 255);
+                                    a.extras[extra].env_color_r = 0;
+                                    a.extras[extra].env_color_g = 0;
+                                    a.extras[extra].env_color_b = 255;
                                 }
                                 else if (kid.Attribute("Color") != null && kid.Attribute("Color").Value.ToUpper() == "GREEN")
                                 {
-                                    a.extras[extra].env_color = System.Drawing.Color.FromArgb(0, 255, 0);
+                                    a.extras[extra].env_color_r = 0;
+                                    a.extras[extra].env_color_g = 255;
+                                    a.extras[extra].env_color_b = 0;
+
                                 }
                                 else if (kid.Attribute("Color") != null && kid.Attribute("Color").Value.ToUpper() == "AMBER")
                                 {
-                                    a.extras[extra].env_color = System.Drawing.Color.FromArgb(255, 194, 0);
+                                    a.extras[extra].env_color_r = 255;
+                                    a.extras[extra].env_color_g = 194;
+                                    a.extras[extra].env_color_b = 0;
                                 }
                                 else if (kid.Attribute("Color") != null && kid.Attribute("Color").Value.ToUpper() == "WHITE")
                                 {
-                                    a.extras[extra].env_color = System.Drawing.Color.FromArgb(255, 255, 255);
+                                    a.extras[extra].env_color_r = 255;
+                                    a.extras[extra].env_color_g = 255;
+                                    a.extras[extra].env_color_b = 255;
                                 }
                             }
                         }
@@ -182,7 +205,7 @@ namespace FiveLife.Server.Sync
 
         private void parsePatternData(XDocument doc, string name)
         {
-            
+
 
             foreach (var el in doc.Root.Elements())
             {
@@ -198,9 +221,9 @@ namespace FiveLife.Server.Sync
                         var state = int.Parse(kid.Name.LocalName.Substring(kid.Name.LocalName.Length - 2));
                         Primary.stages[state] = new Dictionary<object, int>();
 
-                        foreach(var atrb in kid.Attributes())
+                        foreach (var atrb in kid.Attributes())
                         {
-                            if(atrb.Name.LocalName.Substring(0, 5).ToUpper() == "EXTRA")
+                            if (atrb.Name.LocalName.Substring(0, 5).ToUpper() == "EXTRA")
                             {
                                 var id = int.Parse(atrb.Name.LocalName.Substring(5));
                                 Primary.stages[state][id] = bool.Parse(atrb.Value) ? 0 : 1;

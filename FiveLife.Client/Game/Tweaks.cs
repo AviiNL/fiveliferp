@@ -11,7 +11,7 @@ namespace FiveLife.Client.Game
     {
         public override void Initialize()
         {
-            
+
         }
 
         public override async Task Loop()
@@ -20,7 +20,6 @@ namespace FiveLife.Client.Game
 
             // Disable melee with R key
             CitizenFX.Core.Game.DisableControlThisFrame(0, CitizenFX.Core.Control.MeleeAttackLight);
-            CitizenFX.Core.Game.DisableControlThisFrame(2, CitizenFX.Core.Control.MeleeAttackLight);
             
             // Remove nametag
             foreach (var p in (new CitizenFX.Core.PlayerList()))

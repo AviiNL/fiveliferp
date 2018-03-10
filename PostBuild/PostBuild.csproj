@@ -67,125 +67,47 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Extra\patterns\Pattern3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Extra\patterns\Pattern2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Extra\patterns\Pattern1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extra\vcf\ambulance.xml">
+    <Content Include="Extra\vcf\Patrol Vehicle VCFs\FBI2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extra\vcf\FBI2.xml">
+    <Content Include="Extra\vcf\Patrol Vehicle VCFs\POLICE.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extra\vcf\POLICE.xml">
+    <Content Include="Extra\vcf\Patrol Vehicle VCFs\POLICE2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extra\vcf\police2.xml">
+    <Content Include="Extra\vcf\Patrol Vehicle VCFs\POLICE3.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extra\vcf\police3.xml">
+    <Content Include="Extra\vcf\Patrol Vehicle VCFs\POLICE5.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extra\vcf\police4.xml">
+    <Content Include="Extra\vcf\Patrol Vehicle VCFs\SHERIFF2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extra\vcf\pranger.xml">
+    <Content Include="Extra\vcf\Traffic Enforcement VCFs\POLICE6.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extra\vcf\sadler.xml">
+    <Content Include="Extra\vcf\Traffic Enforcement VCFs\SHERIFF.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extra\vcf\sheriff2.xml">
+    <Content Include="Extra\vcf\Unmarked Vehicle VCFs\FBI.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extra\vcf\Unmarked Vehicle VCFs\POLICE4.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />
     <Content Include="Extra\handling.meta">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2010 LSPD F350\pranger.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2010 LSPD F350\pranger.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2010 LSPD F350\pranger_hi.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2010 LSPD F350\vehicles.meta">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2011 LSPD CVPI\police.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2011 LSPD CVPI\police.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2011 LSPD CVPI\police_hi.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2013 LSPD Tahoe\police3+hi.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2013 LSPD Tahoe\police3.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2013 LSPD Tahoe\police3.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2013 LSPD Tahoe\police3_hi.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2015 LSPD Charger\sheriff+hi.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2015 LSPD Charger\sheriff.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2015 LSPD Charger\sheriff.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2015 LSPD Charger\sheriff_hi.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2016 LSPD FPIS\police2+hi.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2016 LSPD FPIS\police2.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2016 LSPD FPIS\police2.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2016 LSPD FPIS\police2_hi.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2016 LSPD Impala\police4+hi.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2016 LSPD Impala\police4.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2016 LSPD Impala\police4.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2016 LSPD Impala\police4_hi.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\2016 LSPD Impala\vehicles.meta">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\ambulance+hi.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\ambulance.yft">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\ambulance.ytd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Extra\stream\ambulance_hi.yft">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

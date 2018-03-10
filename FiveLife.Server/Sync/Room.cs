@@ -42,17 +42,5 @@ namespace FiveLife.Server.Sync
             FireEvent(source, "fivelife.room.exit", room);
             FireEvent("fivelife.room.left", Int32.Parse(source.Handle));
         }
-
-
-
-        //{
-        //    var room = Database.Repository<Shared.Entity.Room>.GetById(arg2.Id);
-
-        //    room.CurrentlyInside.RemoveAll(e => e == Int32.Parse(source.Handle));
-            
-        //    Console.WriteLine(String.Join(",", room.CurrentlyInside));
-        //    Database.Repository<Shared.Entity.Room>.Update(room);
-        //    FireEvent(room.CurrentlyInside.ToArray(), "fivelife.room.joined", Int32.Parse(arg1.Handle), room);
-        //}
     }
 }

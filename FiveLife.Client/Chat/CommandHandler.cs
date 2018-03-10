@@ -19,13 +19,22 @@ namespace FiveLife.Client.Chat
             API.RegisterCommand("teleport", new Action<int, List<object>, string>(Teleport), true);
             API.RegisterCommand("tp", new Action<int, List<object>, string>(Teleport), true);
             API.RegisterCommand("spawn", new Action<int, List<object>, string>(Spawn), true);
-
+            API.RegisterCommand("fix", new Action(Fix), true);
             API.RegisterCommand("giveall", new Action<int, List<object>, string>(GiveWeapon), true);
             API.RegisterCommand("weather", new Action<int, List<object>, string>(AdjustWeather), true);
 
             API.RegisterCommand("extra", new Action<int, List<object>, string>(Extra), false);
             API.RegisterCommand("livery", new Action<int, List<object>, string>(Livery), false);
             API.RegisterCommand("taxi", new Action(Taxi), false);
+        }
+
+        private void Fix()
+        {
+            var veh = CitizenFX.Core.Game.Player.Character.CurrentVehicle;
+            if (veh == null) return;
+
+            veh.Repair();
+            veh.ClearLastWeaponDamage();
         }
 
         private void Taxi()
@@ -81,12 +90,12 @@ namespace FiveLife.Client.Chat
         {
             var model = new Model((string)args[0]);
             model.Request();
-            
+
 
             while (!model.IsLoaded)
                 await BaseScript.Delay(0);
 
-            if(CitizenFX.Core.Game.Player.Character.CurrentVehicle != null)
+            if (CitizenFX.Core.Game.Player.Character.CurrentVehicle != null)
                 CitizenFX.Core.Game.Player.Character.CurrentVehicle.Delete();
 
             var veh = await World.CreateVehicle(model, CitizenFX.Core.Game.Player.Character.Position, CitizenFX.Core.Game.Player.Character.Heading);
@@ -96,7 +105,7 @@ namespace FiveLife.Client.Chat
                 var livery = Int32.Parse((string)args[1]);
                 veh.Mods.Livery = Math.Min(livery, veh.Mods.LiveryCount);
             }
-            
+
             CitizenFX.Core.Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Driver);
 
 

@@ -128,10 +128,6 @@ namespace FiveLife.Client.Game.ELS
                             if (Primaries[pattern].stages[count].ContainsKey(i.ToString()))
                             {
                                 setExtraState(key, i, (Primaries[pattern].stages[count][i.ToString()] == 1));
-                                if (Primaries[pattern].stages[count][i.ToString()] == 0)
-                                {
-                                    runEnvironmentLights(key, i);
-                                }
                             }
                         }
 
@@ -169,11 +165,20 @@ namespace FiveLife.Client.Game.ELS
                 {
                     var boneIndex = API.GetEntityBoneIndexByName(key, $"extra_{extra}");
                     var coords = API.GetWorldPositionOfEntityBone(key, boneIndex);
-
+                    var offset = new Vector3(els_Vehicles[vehN].extras[extra].env_pos_x, els_Vehicles[vehN].extras[extra].env_pos_y, els_Vehicles[vehN].extras[extra].env_pos_z);
+                    var pos = coords + offset;
                     if (API.IsVehicleExtraTurnedOn(key, extra))
                     {
-                        API.DrawLightWithRange(coords.X + els_Vehicles[vehN].extras[extra].env_pos_x, coords.Y + els_Vehicles[vehN].extras[extra].env_pos_y, coords.Z + els_Vehicles[vehN].extras[extra].env_pos_z, els_Vehicles[vehN].extras[extra].env_color.R, els_Vehicles[vehN].extras[extra].env_color.G, els_Vehicles[vehN].extras[extra].env_color.B, Config.vehicleSyncDistance, Config.environmentLightBrightness);
-                        await Delay(2);
+                        API.DrawLightWithRange(
+                            pos.X,
+                            pos.Y,
+                            pos.Z,
+                            els_Vehicles[vehN].extras[extra].env_color_r,
+                            els_Vehicles[vehN].extras[extra].env_color_g,
+                            els_Vehicles[vehN].extras[extra].env_color_b,
+                            50f,
+                            0.1f
+                        );
                     }
 
                 }
@@ -270,10 +275,6 @@ namespace FiveLife.Client.Game.ELS
                                     if (Secondaries[pattern].stages[count].ContainsKey(i.ToString()))
                                     {
                                         setExtraState(key, i, (Secondaries[pattern].stages[count][i.ToString()] == 1));
-                                        if (Secondaries[pattern].stages[count][i.ToString()] == 0)
-                                        {
-                                            runEnvironmentLights(key, i);
-                                        }
                                     }
                                 }
                             }
@@ -282,10 +283,6 @@ namespace FiveLife.Client.Game.ELS
                                 if (Secondaries[pattern].stages[count].ContainsKey(i.ToString()))
                                 {
                                     setExtraState(key, i, (Secondaries[pattern].stages[count][i.ToString()] == 1));
-                                    if (Secondaries[pattern].stages[count][i.ToString()] == 0)
-                                    {
-                                        runEnvironmentLights(key, i);
-                                    }
                                 }
                             }
                         }
@@ -380,10 +377,6 @@ namespace FiveLife.Client.Game.ELS
                                 if (Advisors[pattern].stages[count].ContainsKey(i.ToString()))
                                 {
                                     setExtraState(key, i, (Advisors[pattern].stages[count][i.ToString()] == 1));
-                                    if (Advisors[pattern].stages[count][i.ToString()] == 0)
-                                    {
-                                        runEnvironmentLights(key, i);
-                                    }
                                 }
                             }
 
@@ -456,7 +449,7 @@ namespace FiveLife.Client.Game.ELS
         {
             foreach (var v in elsVehs)
             {
-                if (API.DoesEntityExist(v.Key))
+                if (API.DoesEntityExist(v.Key) && !API.IsEntityDead(v.Key))
                 {
                     var carLoc = API.GetEntityCoords(v.Key, true);
                     var playerPos = API.GetEntityCoords(API.GetPlayerPed(-1), true);
@@ -466,37 +459,36 @@ namespace FiveLife.Client.Game.ELS
 
                         for (int i = 1; i <= 12; i++)
                         {
-                            if (!API.IsEntityDead(v.Key) && API.DoesEntityExist(v.Key))
+                            if (els_Vehicles.ContainsKey(vehN) && els_Vehicles[vehN].extras.ContainsKey(i))
                             {
-                                if (els_Vehicles.ContainsKey(vehN) && els_Vehicles[vehN].extras.ContainsKey(i))
+                                if (API.IsVehicleExtraTurnedOn(v.Key, i))
                                 {
-                                    if (API.IsVehicleExtraTurnedOn(v.Key, i))
+                                    var boneIndex = API.GetEntityBoneIndexByName(v.Key, $"extra_{i}");
+                                    var coords = API.GetWorldPositionOfEntityBone(v.Key, boneIndex);
+                                    var rot = RotAnglesToVec(API.GetEntityRotation(v.Key, 2));
+
+                                    runEnvironmentLights(v.Key, i);
+
+                                    if (els_Vehicles[vehN].extras[i].env_light)
                                     {
-                                        var boneIndex = API.GetEntityBoneIndexByName(v.Key, $"extra_{i}");
-                                        var coords = API.GetWorldPositionOfEntityBone(v.Key, boneIndex);
-                                        var rot = RotAnglesToVec(API.GetEntityRotation(v.Key, 2));
-
-                                        if (els_Vehicles[vehN].extras[i].env_light)
+                                        if (i == 11)
                                         {
-                                            if (i == 11)
-                                            {
-                                                API.DrawSpotLightWithShadow(coords.X + els_Vehicles[vehN].extras[11].env_pos_x, coords.Y + els_Vehicles[vehN].extras[11].env_pos_y, coords.Z + els_Vehicles[vehN].extras[11].env_pos_z, rot.X, rot.Y, rot.Z, 255, 255, 255, 75.0f, 2.0f, 10.0f, 20.0f, 0.0f, 1);
-                                            }
+                                            API.DrawSpotLightWithShadow(coords.X + els_Vehicles[vehN].extras[11].env_pos_x, coords.Y + els_Vehicles[vehN].extras[11].env_pos_y, coords.Z + els_Vehicles[vehN].extras[11].env_pos_z, rot.X, rot.Y, rot.Z, 255, 255, 255, 75.0f, 2.0f, 10.0f, 20.0f, 0.0f, v.Key);
                                         }
-                                        else
+                                    }
+                                    else
+                                    {
+                                        if (i == 11)
                                         {
-                                            if (i == 11)
-                                            {
-                                                API.DrawSpotLightWithShadow(coords.X, coords.Y, coords.Z + 0.2f, rot.X, rot.Y, rot.Z, 255, 255, 255, 75.0f, 2.0f, 10.0f, 20.0f, 0.0f, 1);
-                                            }
+                                            API.DrawSpotLightWithShadow(coords.X, coords.Y, coords.Z + 0.2f, rot.X, rot.Y, rot.Z, 255, 255, 255, 75.0f, 2.0f, 10.0f, 20.0f, 0.0f, v.Key);
                                         }
+                                    }
 
-                                        if (doesVehicleHaveTrafficAdvisor(v.Key))
+                                    if (doesVehicleHaveTrafficAdvisor(v.Key))
+                                    {
+                                        if (i != 7 && i != 8 && i != 9)
                                         {
-                                            if (i != 7 && i != 8 && i != 9)
-                                            {
-                                                runEnvironmentLightWithBrightness(v.Key, i, 0.01f);
-                                            }
+                                            runEnvironmentLightWithBrightness(v.Key, i, 0.01f);
                                         }
                                     }
                                 }
@@ -505,7 +497,7 @@ namespace FiveLife.Client.Game.ELS
                     }
                 }
             }
-            await Delay(4);
+            // await Delay(4);
         }
 
         private async void runEnvironmentLightWithBrightness(int key, int extra, float brightness)
@@ -516,13 +508,26 @@ namespace FiveLife.Client.Game.ELS
 
                 if (els_Vehicles[vehN].extras[extra].env_light)
                 {
-                    var boneIndex = API.GetEntityBoneIndexByName(key, $"extra_{extra}");
-                    var coords = API.GetWorldPositionOfEntityBone(key, boneIndex);
-
                     if (API.IsVehicleExtraTurnedOn(key, extra))
                     {
-                        API.DrawLightWithRange(coords.X + els_Vehicles[vehN].extras[extra].env_pos_x, coords.Y + els_Vehicles[vehN].extras[extra].env_pos_y, coords.Z + els_Vehicles[vehN].extras[extra].env_pos_z, els_Vehicles[vehN].extras[extra].env_color.R, els_Vehicles[vehN].extras[extra].env_color.G, els_Vehicles[vehN].extras[extra].env_color.B, Config.vehicleSyncDistance, brightness);
-                        await Delay(2);
+                        var boneIndex = API.GetEntityBoneIndexByName(key, $"extra_{extra}");
+                        var coords = API.GetWorldPositionOfEntityBone(key, boneIndex);
+                        var offset = new Vector3(els_Vehicles[vehN].extras[extra].env_pos_x, els_Vehicles[vehN].extras[extra].env_pos_y, els_Vehicles[vehN].extras[extra].env_pos_z);
+                        var pos = coords + offset;
+
+                        if (API.IsVehicleExtraTurnedOn(key, extra))
+                        {
+                            API.DrawLightWithRange(
+                                pos.X,
+                                pos.Y,
+                                pos.Z,
+                                els_Vehicles[vehN].extras[extra].env_color_r,
+                                els_Vehicles[vehN].extras[extra].env_color_g,
+                                els_Vehicles[vehN].extras[extra].env_color_b,
+                                50f,
+                                brightness
+                            );
+                        }
                     }
                 }
             }
@@ -1469,7 +1474,7 @@ namespace FiveLife.Client.Game.ELS
 
                 if (API.IsVehicleExtraTurnedOn(veh, 7))
                 {
-                    API.DrawRect(0.9f, 0.94f, 0.015f, 0.015f, els_Vehicles[vehN].extras[7].env_color.R, els_Vehicles[vehN].extras[7].env_color.G, els_Vehicles[vehN].extras[7].env_color.B, 225);
+                    API.DrawRect(0.9f, 0.94f, 0.015f, 0.015f, els_Vehicles[vehN].extras[7].env_color_r, els_Vehicles[vehN].extras[7].env_color_g, els_Vehicles[vehN].extras[7].env_color_b, 225);
                 }
                 else
                 {
@@ -1478,7 +1483,7 @@ namespace FiveLife.Client.Game.ELS
 
                 if (API.IsVehicleExtraTurnedOn(veh, 8))
                 {
-                    API.DrawRect(0.92f, 0.94f, 0.015f, 0.015f, els_Vehicles[vehN].extras[8].env_color.R, els_Vehicles[vehN].extras[8].env_color.G, els_Vehicles[vehN].extras[8].env_color.B, 225);
+                    API.DrawRect(0.92f, 0.94f, 0.015f, 0.015f, els_Vehicles[vehN].extras[8].env_color_r, els_Vehicles[vehN].extras[8].env_color_g, els_Vehicles[vehN].extras[8].env_color_b, 225);
                 }
                 else
                 {
@@ -1487,7 +1492,7 @@ namespace FiveLife.Client.Game.ELS
 
                 if (API.IsVehicleExtraTurnedOn(veh, 9))
                 {
-                    API.DrawRect(0.94f, 0.94f, 0.015f, 0.015f, els_Vehicles[vehN].extras[9].env_color.R, els_Vehicles[vehN].extras[9].env_color.G, els_Vehicles[vehN].extras[9].env_color.B, 225);
+                    API.DrawRect(0.94f, 0.94f, 0.015f, 0.015f, els_Vehicles[vehN].extras[9].env_color_r, els_Vehicles[vehN].extras[9].env_color_g, els_Vehicles[vehN].extras[9].env_color_b, 225);
                 }
                 else
                 {
@@ -1496,7 +1501,7 @@ namespace FiveLife.Client.Game.ELS
 
                 if (API.IsVehicleExtraTurnedOn(veh, 1))
                 {
-                    API.DrawRect(0.89f, 0.92f, 0.015f, 0.015f, els_Vehicles[vehN].extras[1].env_color.R, els_Vehicles[vehN].extras[1].env_color.G, els_Vehicles[vehN].extras[1].env_color.B, 225);
+                    API.DrawRect(0.89f, 0.92f, 0.015f, 0.015f, els_Vehicles[vehN].extras[1].env_color_r, els_Vehicles[vehN].extras[1].env_color_g, els_Vehicles[vehN].extras[1].env_color_b, 225);
                 }
                 else
                 {
@@ -1505,7 +1510,7 @@ namespace FiveLife.Client.Game.ELS
 
                 if (API.IsVehicleExtraTurnedOn(veh, 2))
                 {
-                    API.DrawRect(0.91f, 0.92f, 0.015f, 0.015f, els_Vehicles[vehN].extras[2].env_color.R, els_Vehicles[vehN].extras[2].env_color.G, els_Vehicles[vehN].extras[2].env_color.B, 225);
+                    API.DrawRect(0.91f, 0.92f, 0.015f, 0.015f, els_Vehicles[vehN].extras[2].env_color_r, els_Vehicles[vehN].extras[2].env_color_g, els_Vehicles[vehN].extras[2].env_color_b, 225);
                 }
                 else
                 {
@@ -1514,7 +1519,7 @@ namespace FiveLife.Client.Game.ELS
 
                 if (API.IsVehicleExtraTurnedOn(veh, 3))
                 {
-                    API.DrawRect(0.93f, 0.92f, 0.015f, 0.015f, els_Vehicles[vehN].extras[3].env_color.R, els_Vehicles[vehN].extras[3].env_color.G, els_Vehicles[vehN].extras[3].env_color.B, 225);
+                    API.DrawRect(0.93f, 0.92f, 0.015f, 0.015f, els_Vehicles[vehN].extras[3].env_color_r, els_Vehicles[vehN].extras[3].env_color_g, els_Vehicles[vehN].extras[3].env_color_b, 225);
                 }
                 else
                 {
@@ -1523,7 +1528,7 @@ namespace FiveLife.Client.Game.ELS
 
                 if (API.IsVehicleExtraTurnedOn(veh, 4))
                 {
-                    API.DrawRect(0.95f, 0.92f, 0.015f, 0.015f, els_Vehicles[vehN].extras[4].env_color.R, els_Vehicles[vehN].extras[4].env_color.G, els_Vehicles[vehN].extras[4].env_color.B, 225);
+                    API.DrawRect(0.95f, 0.92f, 0.015f, 0.015f, els_Vehicles[vehN].extras[4].env_color_r, els_Vehicles[vehN].extras[4].env_color_g, els_Vehicles[vehN].extras[4].env_color_b, 225);
                 }
                 else
                 {
@@ -1532,7 +1537,7 @@ namespace FiveLife.Client.Game.ELS
 
                 if (API.IsVehicleExtraTurnedOn(veh, 5))
                 {
-                    API.DrawRect(0.91f, 0.885f, 0.015f, 0.015f, els_Vehicles[vehN].extras[5].env_color.R, els_Vehicles[vehN].extras[5].env_color.G, els_Vehicles[vehN].extras[5].env_color.B, 225);
+                    API.DrawRect(0.91f, 0.885f, 0.015f, 0.015f, els_Vehicles[vehN].extras[5].env_color_r, els_Vehicles[vehN].extras[5].env_color_g, els_Vehicles[vehN].extras[5].env_color_b, 225);
                 }
                 else
                 {
@@ -1541,7 +1546,7 @@ namespace FiveLife.Client.Game.ELS
 
                 if (API.IsVehicleExtraTurnedOn(veh, 6))
                 {
-                    API.DrawRect(0.93f, 0.885f, 0.015f, 0.015f, els_Vehicles[vehN].extras[6].env_color.R, els_Vehicles[vehN].extras[6].env_color.G, els_Vehicles[vehN].extras[6].env_color.B, 225);
+                    API.DrawRect(0.93f, 0.885f, 0.015f, 0.015f, els_Vehicles[vehN].extras[6].env_color_r, els_Vehicles[vehN].extras[6].env_color_g, els_Vehicles[vehN].extras[6].env_color_b, 225);
                 }
                 else
                 {

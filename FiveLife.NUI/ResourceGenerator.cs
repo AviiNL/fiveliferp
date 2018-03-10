@@ -11,7 +11,7 @@ namespace FiveLife.NUI
         public string resource_manifest_version { get; set; }
         public string ui_page { get; set; }
 
-        public List<string> handling_files = new List<string>();
+        public Dictionary<string, string> data_files = new Dictionary<string, string>();
         public List<string> client_scripts = new List<string>();
         public List<string> server_scripts = new List<string>();
         public List<string> files = new List<string>();
@@ -23,9 +23,9 @@ namespace FiveLife.NUI
 
             output += $"ui_page '{ui_page}'\n\n";
 
-            foreach (var handling_file in handling_files)
+            foreach (var data_file in data_files)
             {
-                output += $"datafile 'HANDLING_FILE' '{handling_file}'\n";
+                output += $"datafile '{data_file.Key.ToUpper()}' '{data_file.Value}'\n";
             }
             output += "\n";
 
@@ -44,6 +44,10 @@ namespace FiveLife.NUI
             output += "}\n\n";
 
             output += "files {\n";
+            foreach (var data_file in data_files)
+            {
+                output += $"\t'{data_file.Value}',\n";
+            }
             foreach (var script in files)
             {
                 output += $"\t'{script}',\n";

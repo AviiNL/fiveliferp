@@ -112,14 +112,17 @@ namespace CitizenFX.Core
             while (!Function.Call<bool>(Hash.HAS_COLLISION_LOADED_AROUND_ENTITY, Game.Player.Character))
                 await BaseScript.Delay(0);
 
+            Game.Player.Character.CancelRagdoll();
             Function.Call(Hash.NETWORK_RESURRECT_LOCAL_PLAYER, Position.X, Position.Y, Position.Z, Heading, true, true, false);
             Function.Call(Hash.CLEAR_PED_TASKS_IMMEDIATELY, ped);
 
             if (removeWeapons)
                 Function.Call(Hash.REMOVE_ALL_PED_WEAPONS, ped, true);
 
-            self.Character.ClearBloodDamage();
-            self.Character.ClearLastWeaponDamage();
+            Game.Player.Character.ClearBloodDamage();
+            Game.Player.Character.ClearLastWeaponDamage();
+            Game.Player.Character.ResetVisibleDamage();
+            Game.Player.Character.IsInvincible = false;
 
             Function.Call(Hash.CLEAR_PLAYER_WANTED_LEVEL, self);
             Function.Call(Hash.SHUTDOWN_LOADING_SCREEN);

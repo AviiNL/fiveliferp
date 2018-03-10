@@ -13,7 +13,9 @@ namespace FiveLife.Shared.ELS
         public float env_pos_x { get; set; }
         public float env_pos_y { get; set; }
         public float env_pos_z { get; set; }
-        public System.Drawing.Color env_color { get; set; }
+        public int env_color_r { get; set; }
+        public int env_color_g { get; set; }
+        public int env_color_b { get; set; }
 
     }
 }
