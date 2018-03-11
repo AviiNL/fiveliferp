@@ -29,7 +29,6 @@ namespace FiveLife.Client.Game
 
             // Disable auto-healing
             Function.Call(Hash.SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER, CitizenFX.Core.Game.Player, 0f);
-
         }
 
     }

@@ -146,7 +146,7 @@ namespace FiveLife.Client.Game.Rooms
             var Inside = new Vector3(room.InsideSpawnX, room.InsideSpawnY, room.InsideSpawnZ);
 
             await CitizenFX.Core.Game.Player.Teleport(Inside, room.InsideSpawnHeading);
-            
+
 
             busy = false;
         }

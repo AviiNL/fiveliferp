@@ -1,5 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using CitizenFX.Core.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,23 @@ namespace FiveLife.Client.Chat
             API.RegisterCommand("teleport", new Action<int, List<object>, string>(Teleport), true);
             API.RegisterCommand("tp", new Action<int, List<object>, string>(Teleport), true);
             API.RegisterCommand("spawn", new Action<int, List<object>, string>(Spawn), true);
-            API.RegisterCommand("fix", new Action(Fix), true);
             API.RegisterCommand("giveall", new Action<int, List<object>, string>(GiveWeapon), true);
             API.RegisterCommand("weather", new Action<int, List<object>, string>(AdjustWeather), true);
 
+            API.RegisterCommand("fix", new Action(Fix), false);
             API.RegisterCommand("extra", new Action<int, List<object>, string>(Extra), false);
             API.RegisterCommand("livery", new Action<int, List<object>, string>(Livery), false);
-            API.RegisterCommand("taxi", new Action(Taxi), false);
+            API.RegisterCommand("test", new Action(Test), false);
+            API.RegisterCommand("license", new Action(License), false);
+
+        }
+
+        private void License()
+        {
+            var veh = CitizenFX.Core.Game.Player.Character.CurrentVehicle;
+            if (veh == null) return;
+
+            Debug.WriteLine($"{veh.Mods.LicensePlate}");
         }
 
         private void Fix()
@@ -37,13 +48,49 @@ namespace FiveLife.Client.Chat
             veh.ClearLastWeaponDamage();
         }
 
-        private void Taxi()
+        private async void Test()
         {
-            var vehicle = CitizenFX.Core.Game.Player.Character.CurrentVehicle;
-            if (vehicle == null) return;
+            var playerPed = CitizenFX.Core.Game.Player.Character;
+            var switchToCoords = new Vector3(129.063f, 6616.838f, 31.827f);
+            var switchToModel = new Model(PedHash.FilmDirector);
+            var currentPos = CitizenFX.Core.Game.Player.Character.Position;
+            var switchType = API.GetIdealPlayerSwitchType(currentPos.X, currentPos.Y, currentPos.Z, switchToCoords.X, switchToCoords.Y, switchToCoords.Z);
+            var switchFlag = 1024;
 
-            API.SetTaxiLights(vehicle.Handle, !vehicle.IsTaxiLightOn);
-            Debug.WriteLine($"Taxi: {vehicle.IsTaxiLightOn.ToString()}");
+            if (switchType == 3)
+            {
+                switchType = 2;
+                if (switchToCoords.DistanceToSquared(currentPos) < 40)
+                {
+                    Debug.WriteLine("Too close?!");
+                    return;
+                }
+            }
+
+            switchToModel.Request();
+            while (!switchToModel.IsLoaded)
+                await Delay(0);
+
+            var switchToPed = await World.CreatePed(switchToModel, switchToCoords, 0);
+            switchToPed.IsVisible = false;
+            switchToPed.IsInvincible = true;
+            API.SetEntityAsMissionEntity(switchToPed.Handle, true, false);
+            switchToPed.Task.ClearAllImmediately();
+
+            if (!playerPed.IsInjured)
+                API.SetPedDesiredHeading(switchToPed.Handle, playerPed.Heading);
+
+            switchToPed.IsCollisionEnabled = false;
+            switchToPed.IsVisible = false;
+
+            API.StartPlayerSwitch(playerPed.Handle, switchToPed.Handle, switchFlag, switchType);
+
+            while (API.GetPlayerSwitchState() != 8)
+                await Delay(0);
+
+            API.SetFocusEntity(switchToPed.Handle);
+            API.SetEntityCoords(playerPed.Handle, switchToCoords.X, switchToCoords.Y, switchToCoords.Z, false, false, false, false);
+            switchToPed.Delete();
         }
 
         private void AdjustWeather(int arg1, List<object> arg2, string arg3)
@@ -80,7 +127,7 @@ namespace FiveLife.Client.Chat
 
         private void GiveWeapon(int arg1, List<object> arg2, string arg3)
         {
-            foreach(var weapon in Enum.GetValues(typeof(WeaponHash)))
+            foreach (var weapon in Enum.GetValues(typeof(WeaponHash)))
             {
                 CitizenFX.Core.Game.Player.Character.Weapons.Give((WeaponHash)weapon, 999, false, true);
             }
@@ -154,14 +201,14 @@ namespace FiveLife.Client.Chat
                 var y = float.Parse(raw_y);
                 var z = float.Parse(raw_z);
 
-                await CitizenFX.Core.Game.Player.Spawn(new Vector3(x, y, z), 0, false);
+                await CitizenFX.Core.Game.Player.Teleport(new Vector3(x, y, z), 0);
             }
             else
             {
                 var x = World.GetWaypointBlip().Position.X;
                 var y = World.GetWaypointBlip().Position.Y;
 
-                await CitizenFX.Core.Game.Player.Spawn(new Vector3(x, y, -199), 0, false); // todo: fix z
+                await CitizenFX.Core.Game.Player.Teleport(new Vector3(x, y, -199), 0); // todo: fix z
             }
         }
 
@@ -170,6 +217,12 @@ namespace FiveLife.Client.Chat
         {
             Debug.WriteLine("{0}", $"Current Position: {CitizenFX.Core.Game.Player.Character.Position.ToString()}");
             Debug.WriteLine("{0}", $"Current Heading : {CitizenFX.Core.Game.Player.Character.Heading}");
+
+            var Position = Function.Call<Vector3>(Hash.GET_GAMEPLAY_CAM_COORD);
+            var Rotation = Function.Call<Vector3>(Hash.GET_GAMEPLAY_CAM_ROT, 2);
+            Debug.WriteLine("{0}", $"Current Position: {Position}");
+            Debug.WriteLine("{0}", $"Current Heading : {Rotation}");
+
         }
 
         private void Revive()

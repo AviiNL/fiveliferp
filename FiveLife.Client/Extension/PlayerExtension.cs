@@ -54,7 +54,7 @@ namespace CitizenFX.Core
 
         public static async Task Spawn(this Player self, FiveLife.Shared.Entity.Character obj)
         {
-            self.Character.Apply(obj);
+            await self.Character.Apply(obj);
 
             self.SetStat("STAMINA", obj.Stamina);
             self.SetStat("STEALTH_ABILITY", obj.Stealth);

@@ -12,15 +12,12 @@ namespace FiveLife.Client.Game.Generic
     {
         public override async Task Loop()
         {
-            
             foreach(var ped in new PedsPool())
             {
                 ped.DropsWeaponsOnDeath = false;
             }
 
+            await Delay(1000);
         }
-
-
-
     }
 }

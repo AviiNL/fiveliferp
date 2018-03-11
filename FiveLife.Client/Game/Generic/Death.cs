@@ -29,11 +29,8 @@ namespace FiveLife.Client.Game.Generic
         private async void OnRespawn(Vector4 location)
         {
             isDead = false;
-            await CitizenFX.Core.Game.Player.Spawn(new Vector3(location.X, location.Y, location.Z), location.W, false);
+            await CitizenFX.Core.Game.Player.Spawn(new Vector3(location.X, location.Y, location.Z), location.W);
 
-            Screen.Fading.FadeIn(5000);
-            while (Screen.Fading.IsFadingIn)
-                await Delay(0);
         }
 
         private void Respawn()

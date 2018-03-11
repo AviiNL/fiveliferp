@@ -38,7 +38,7 @@ namespace FiveLife.Client.CharacterCreator
         public async Task Start()
         {
 
-            await CitizenFX.Core.Game.Player.Spawn(PlayerPosition, PlayerHeading, true);
+            await CitizenFX.Core.Game.Player.Spawn(PlayerPosition, PlayerHeading);
 
             Function.Call(Hash.SET_PLAYER_CONTROL, CitizenFX.Core.Game.Player, false, 1280);
             Function.Call(Hash.SET_ENTITY_COLLISION, CitizenFX.Core.Game.Player.Character, true);

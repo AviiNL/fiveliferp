@@ -54,6 +54,7 @@ namespace FiveLife.Client.Camera
 
         public void MoveTo(Waypoint waypoint)
         {
+            tween.Stop(StopBehavior.AsIs);
             var currentWaypoint = new Waypoint(Position, Rotation, FieldOfView, 0);
 
             tween.Start(currentWaypoint, waypoint, waypoint.Duration, ScaleFuncs.CubicEaseInOut);
@@ -71,9 +72,6 @@ namespace FiveLife.Client.Camera
                 Rotation = tween.CurrentValue.LookAt;
                 FieldOfView = tween.CurrentValue.FieldOfView;
             }
-
-            // Debug.WriteLine(Rotation.ToString());
-            // Rotation = new Vector3(Rotation.X + 0.2f, Rotation.Y + 0.5f, Rotation.Z + 0.7f);
 
             _camera.Position = Position;
             _camera.PointAt(Rotation);

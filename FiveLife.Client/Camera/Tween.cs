@@ -272,7 +272,9 @@ namespace FiveLife.Client.Camera
             {
                 CurrentTime = Duration;
                 State = TweenState.Stopped;
-                await Completed?.Invoke();
+
+                if(Completed != null)
+                    await Completed.Invoke();
             }
 
             UpdateValue();
