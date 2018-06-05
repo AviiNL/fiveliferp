@@ -17,7 +17,8 @@ namespace FiveLife.Server.Sync
 
         private void OnRoomEnter([FromSource] Player source, Shared.Entity.Room obj, Shared.Entity.Character character)
         {
-            var room = Database.Repository<Shared.Entity.Room>.GetById(obj.Id);
+            var room = Database.SqLite.Repository<Shared.Entity.Room>.GetById(obj.Id);
+            if (room == null) return;
 
             if (!(room.Owner.Id == character.Id || room.Allowed.FirstOrDefault(x => x.Id == character.Id) != null))
             {
@@ -26,7 +27,7 @@ namespace FiveLife.Server.Sync
             }
 
             room.CurrentlyInside.Add(Int32.Parse(source.Handle));
-            Database.Repository<Shared.Entity.Room>.Update(room);
+            Database.SqLite.Repository<Shared.Entity.Room>.Update(room);
 
             FireEvent(source, "fivelife.room.enter", true, room);
             FireEvent("fivelife.room.joined", Int32.Parse(source.Handle), room);
@@ -34,10 +35,10 @@ namespace FiveLife.Server.Sync
 
         private void OnRoomLeft([FromSource] Player source, Shared.Entity.Room obj)
         {
-            var room = Database.Repository<Shared.Entity.Room>.GetById(obj.Id);
+            var room = Database.SqLite.Repository<Shared.Entity.Room>.GetById(obj.Id);
 
             room.CurrentlyInside.RemoveAll(e => e == Int32.Parse(source.Handle));
-            Database.Repository<Shared.Entity.Room>.Update(room);
+            Database.SqLite.Repository<Shared.Entity.Room>.Update(room);
 
             FireEvent(source, "fivelife.room.exit", room);
             FireEvent("fivelife.room.left", Int32.Parse(source.Handle));

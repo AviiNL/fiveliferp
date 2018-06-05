@@ -1,5 +1,5 @@
 ﻿using CitizenFX.Core;
-using FiveLife.Database;
+using FiveLife.Database.SqLite;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,10 +15,6 @@ namespace FiveLife.Server.Server
 
         public Database()
         {
-            //System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-            //System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
-
-
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Serialize,

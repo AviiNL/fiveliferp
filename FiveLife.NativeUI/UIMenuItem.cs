@@ -16,7 +16,7 @@ namespace FiveLife.NativeUI
         protected Sprite _badgeRight;
 
         protected UIResText _labelText;
-        
+
         /// <summary>
         /// Called when user selects the current item.
         /// </summary>

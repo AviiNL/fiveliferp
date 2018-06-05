@@ -13,9 +13,9 @@ namespace FiveLife.NUI
 {
     class Program
     {
-        private static readonly string path = @"C:\FiveM\Source\FiveLife\FiveLife.NUI\html\build\";
-        private static readonly string dest = @"C:\FiveM\Server\server-data\resources\[FiveLife]\fivelife\html\";
-        private static readonly string resource = @"C:\FiveM\Server\server-data\resources\[FiveLife]\fivelife\__resource.lua";
+        private static readonly string path = @"D:\FiveM\Source\FiveLife\FiveLife.NUI\html\build\";
+        private static readonly string dest = @"D:\FiveM\Server\server-data\resources\[FiveLife]\fivelife\html\";
+        private static readonly string resource = @"D:\FiveM\Server\server-data\resources\[FiveLife]\fivelife\__resource.lua";
 
         static void Main(string[] args)
         {
@@ -30,7 +30,7 @@ namespace FiveLife.NUI
             
             Resource.client_scripts.Add("fivelife.client.net.dll");
 
-            Resource.server_scripts.Add("fivelife.database.net.dll");
+            Resource.server_scripts.Add("fivelife.database.sqlite.net.dll");
             Resource.server_scripts.Add("fivelife.server.net.dll");
 
             Resource.files.Add("fivelife.shared.net.dll");
@@ -65,7 +65,7 @@ namespace FiveLife.NUI
         private static void YarnBuild()
         {
             var startInfo = new ProcessStartInfo();
-            startInfo.WorkingDirectory = @"C:\FiveM\Source\FiveLife\FiveLife.NUI\html\";
+            startInfo.WorkingDirectory = @"D:\FiveM\Source\FiveLife\FiveLife.NUI\html\";
             startInfo.FileName = @"c:\Users\Yme-Jan\AppData\Roaming\npm\yarn";
             startInfo.Arguments = "run build";
 

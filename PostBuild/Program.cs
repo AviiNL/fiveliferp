@@ -21,15 +21,17 @@ namespace PostBuild
 
         static void Main(string[] args)
         {
-            CopyFiles(@"C:\FiveM\Source\FiveLife\FiveLife.Database\bin\Debug", "Entity*.dll");
-            CopyFiles(@"C:\FiveM\Source\FiveLife\FiveLife.Database\bin\Debug", "MySql*.dll");
-            CopyFiles(@"C:\FiveM\Source\FiveLife\FiveLife.Database\bin\Debug", "System*.dll");
-            CopyFiles(@"C:\FiveM\Source\FiveLife\FiveLife.Database\bin\Debug", "I18*.dll");
-            CopyFiles(@"C:\FiveM\Source\FiveLife\FiveLife.Database\bin\Debug", "Nequeo*.dll");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\FiveLife.Database.SqLite\bin\Debug", "*.pdb");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\FiveLife.Database.SqLite\bin\Debug", "Entity*.dll");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\FiveLife.Database.SqLite\bin\Debug", "System*.dll");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\FiveLife.Database.SqLite\bin\Debug", "I18*.dll");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\FiveLife.Database.SqLite\bin\Debug", "Nequeo*.dll");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\FiveLife.Database.SqLite\bin\Debug", "x64\\*.dll");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\FiveLife.Database.SqLite\bin\Debug", "x86\\*.dll");
 
-            CopyFiles(@"C:\FiveM\Source\FiveLife\FiveLife.Client\bin\Debug", "*.dll");
-            CopyFiles(@"C:\FiveM\Source\FiveLife\FiveLife.Server\bin\Debug", "*.dll");
-            CopyFiles(@"C:\FiveM\Source\FiveLife\PostBuild\bin\Debug\Extra", "*");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\FiveLife.Client\bin\Debug", "*.dll");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\FiveLife.Server\bin\Debug", "*.dll");
+            CopyFiles(@"D:\FiveM\Source\FiveLife\PostBuild\bin\Debug\Extra", "*");
 
             Restart();
         }
@@ -40,7 +42,7 @@ namespace PostBuild
 
             foreach (var file in clientFiles)
             {
-                var dest = file.Replace(path, @"C:\FiveM\Server\server-data\resources\[FiveLife]\fivelife");
+                var dest = file.Replace(path, @"D:\FiveM\Server\server-data\resources\[FiveLife]\fivelife");
                 var destDir = Directory.GetParent(dest);
 
                 Directory.CreateDirectory(destDir.FullName);
@@ -48,8 +50,8 @@ namespace PostBuild
                 File.Copy(file, dest, true);
             }
 
-            if(File.Exists(@"C:\FiveM\Server\server-data\resources\[FiveLife]\fivelife\\CitizenFX.Core.dll"))
-                File.Delete(@"C:\FiveM\Server\server-data\resources\[FiveLife]\fivelife\\CitizenFX.Core.dll");
+            if(File.Exists(@"D:\FiveM\Server\server-data\resources\[FiveLife]\fivelife\\CitizenFX.Core.dll"))
+                File.Delete(@"D:\FiveM\Server\server-data\resources\[FiveLife]\fivelife\\CitizenFX.Core.dll");
         }
 
         static void Restart()

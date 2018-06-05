@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using Font = CitizenFX.Core.UI.Font;
 using System.Drawing;
+using System.Linq;
 
 namespace FiveLife.NativeUI
 {
@@ -14,7 +15,8 @@ namespace FiveLife.NativeUI
         protected Sprite _arrowLeft;
         protected Sprite _arrowRight;
 
-        protected List<dynamic> _items { get; set; }
+        protected List<UIMenuListItemItem> _items { get; set; }
+        public List<UIMenuListItemItem> Items { get { return _items; } }
 
         /// <summary>
         /// Triggered when the list is changed.
@@ -27,12 +29,11 @@ namespace FiveLife.NativeUI
         public event ItemListEvent OnListSelected;
 
         protected int _index;
-        
+
         /// <summary>
         /// Returns the current selected index.
         /// </summary>
-        public int Index
-        {
+        public int Index {
             get { return _items.Count == 0 ? 0 : _index % _items.Count; }
             set { _index = _items.Count == 0 ? 0 : (100000000 - (100000000 % _items.Count) + value); }
         }
@@ -44,7 +45,18 @@ namespace FiveLife.NativeUI
         /// <param name="text">Item label.</param>
         /// <param name="items">List that contains your items.</param>
         /// <param name="index">Index in the list. If unsure user 0.</param>
-        public UIMenuListItem(string text, List<dynamic> items, int index)
+        public UIMenuListItem(string text)
+            : this(text, new List<UIMenuListItemItem>(), 0, "")
+        {
+        }
+
+        /// <summary>
+        /// List item, with left/right arrows.
+        /// </summary>
+        /// <param name="text">Item label.</param>
+        /// <param name="items">List that contains your items.</param>
+        /// <param name="index">Index in the list. If unsure user 0.</param>
+        public UIMenuListItem(string text, List<UIMenuListItemItem> items, int index)
             : this(text, items, index, "")
         {
         }
@@ -56,20 +68,20 @@ namespace FiveLife.NativeUI
         /// <param name="items">List that contains your items.</param>
         /// <param name="index">Index in the list. If unsure user 0.</param>
         /// <param name="description">Description for this item.</param>
-        public UIMenuListItem(string text, List<dynamic> items, int index, string description)
+        public UIMenuListItem(string text, List<UIMenuListItemItem> items, int index, string description)
             : base(text, description)
         {
             const int y = 0;
-            _items = new List<dynamic>(items);
+            _items = new List<UIMenuListItemItem>(items);
             _arrowLeft = new Sprite("commonmenu", "arrowleft", new PointF(110, 105 + y), new SizeF(30, 30));
             _arrowRight = new Sprite("commonmenu", "arrowright", new PointF(280, 105 + y), new SizeF(30, 30));
             _itemText = new UIResText("", new PointF(290, y + 104), 0.35f, UnknownColors.White, Font.ChaletLondon,
-                UIResText.Alignment.Left) {TextAlignment = UIResText.Alignment.Right};
-            if(index != 0)
-                Index = index;
+                UIResText.Alignment.Left)
+            { TextAlignment = UIResText.Alignment.Right };
+
         }
 
-        public void Reset(List<dynamic> items)
+        public void Reset(List<UIMenuListItemItem> items)
         {
             this._items = items;
             this.Index = 0;
@@ -94,22 +106,20 @@ namespace FiveLife.NativeUI
         /// </summary>
         /// <param name="item">Item to search for.</param>
         /// <returns>Item index.</returns>
-        public virtual int ItemToIndex(dynamic item)
+        public virtual int ItemToIndex(UIMenuListItemItem item)
         {
-            return _items.FindIndex(item);
+            return _items.FindIndex(e => e == item);
         }
-
 
         /// <summary>
         /// Find an item by it's index and return the item.
         /// </summary>
         /// <param name="index">Item's index.</param>
         /// <returns>Item</returns>
-        public virtual dynamic IndexToItem(int index)
+        public virtual UIMenuListItemItem IndexToItem(int index)
         {
             return _items[index];
         }
-
 
         /// <summary>
         /// Draw item.
@@ -119,11 +129,17 @@ namespace FiveLife.NativeUI
             base.Draw();
             if (_items.Count == 0) return;
 
-            string caption = _items[Index].ToString();
+            string caption = $"{Index + 1}/{_items.Count}";
+
+            if (_items[Index].Label.Length > 0)
+            {
+                caption = $"{_items[Index].Label} ({Index + 1}/{_items.Count})";
+            }
+
             int offset = StringMeasurer.MeasureString(caption);
 
             _itemText.Color = Enabled ? Selected ? UnknownColors.Black : UnknownColors.WhiteSmoke : Color.FromArgb(163, 159, 148);
-            
+
             _itemText.Caption = caption;
 
             _arrowLeft.Color = Enabled ? Selected ? UnknownColors.Black : UnknownColors.WhiteSmoke : Color.FromArgb(163, 159, 148);
@@ -145,12 +161,15 @@ namespace FiveLife.NativeUI
 
         internal virtual void ListChangedTrigger(int newindex)
         {
-            OnListChanged?.Invoke(this, newindex);
+            OnListChanged?.Invoke(this, _items[newindex]);
         }
 
         internal virtual void ListSelectedTrigger(int newindex)
         {
-            OnListSelected?.Invoke(this, newindex);
+            if(_items.Count > 0)
+                OnListSelected?.Invoke(this, _items[newindex]);
+            else
+                OnListSelected?.Invoke(this, null);
         }
 
         public override void SetRightBadge(BadgeStyle badge)

@@ -23,10 +23,10 @@ namespace CitizenFX.Core
             #endregion
 
             #region PedComponents
-            if (API.IsPedComponentVariationValid(self.Handle,(int)PedComponents.Hair, obj.Hair, obj.HairTexture))
+            if (API.IsPedComponentVariationValid(self.Handle, (int)PedComponents.Hair, obj.Hair, obj.HairTexture))
                 self.Style[PedComponents.Hair].SetVariation(obj.Hair, obj.HairTexture);
 
-            if(API.IsPedHairColorValid(obj.HairColor) && API.IsPedHairColorValid(obj.HairHighlight))
+            if (API.IsPedHairColorValid(obj.HairColor) && API.IsPedHairColorValid(obj.HairHighlight))
                 Function.Call(Hash._SET_PED_HAIR_COLOR, self, obj.HairColor, obj.HairHighlight);
 
             if (API.IsPedComponentVariationValid(self.Handle, (int)PedComponents.Face, obj.Face, obj.FaceTexture))
@@ -147,7 +147,7 @@ namespace CitizenFX.Core
 
             // @todo[inventory]: Add weapons owned by player
             #endregion
-            
+
         }
     }
 }

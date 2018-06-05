@@ -12,7 +12,7 @@ namespace FiveLife.Client.Game.Rooms
     public class RoomHandler : FiveLifeScript
     {
         bool busy = false;
-        int roomId = 0;
+        public static int RoomId = 0;
 
         Dictionary<int, bool> visible = new Dictionary<int, bool>();
 
@@ -61,7 +61,7 @@ namespace FiveLife.Client.Game.Rooms
 
         private async void UpdateVisibility()
         {
-            roomId = 0;
+            RoomId = 0;
             Data.Rooms = await Database.Repository<Room>.GetAll();
             foreach (var room in Data.Rooms)
             {
@@ -76,18 +76,18 @@ namespace FiveLife.Client.Game.Rooms
                     // find the room we're currently in
                     if (inside == CitizenFX.Core.Game.Player.ServerId)
                     {
-                        roomId = room.Id;
+                        RoomId = room.Id;
                         break;
                     }
                 }
             }
-            Debug.WriteLine(roomId.ToString());
+            Debug.WriteLine(RoomId.ToString());
             // If we are in a room, find out who's there too
-            if (roomId != 0)
+            if (RoomId != 0)
             {
-                Debug.WriteLine(String.Join(",", Data.Rooms.FirstOrDefault(e => e.Id == roomId).CurrentlyInside));
+                Debug.WriteLine(String.Join(",", Data.Rooms.FirstOrDefault(e => e.Id == RoomId).CurrentlyInside));
 
-                foreach (var obj in Data.Rooms.FirstOrDefault(e => e.Id == roomId).CurrentlyInside)
+                foreach (var obj in Data.Rooms.FirstOrDefault(e => e.Id == RoomId).CurrentlyInside)
                 {
                     var p = new PlayerList()[obj];
                     visible[p.Character.Handle] = true;
@@ -106,19 +106,19 @@ namespace FiveLife.Client.Game.Rooms
         private void OnRoomJoined(int obj, Room room)
         {
 
-            if(roomId != 0)
+            if(RoomId != 0)
                 UpdateVisibility();
         }
 
         private void OnRoomLeft(int obj)
         {
-            if (roomId != 0)
+            if (RoomId != 0)
                 UpdateVisibility();
         }
 
         private async void OnRoomExit(Room room)
         {
-            roomId = 0;
+            RoomId = 0;
 
             Function.Call(Hash.NETWORK_SET_VOICE_CHANNEL, 0);
 
@@ -138,7 +138,7 @@ namespace FiveLife.Client.Game.Rooms
                 busy = false;
                 return;
             }
-            roomId = room.Id;
+            RoomId = room.Id;
 
             Function.Call(Hash.REQUEST_IPL, room.IPL);
             Function.Call(Hash.NETWORK_SET_VOICE_CHANNEL, room.Id);
@@ -182,7 +182,7 @@ namespace FiveLife.Client.Game.Rooms
                     FireServerEvent("fivelife.room.enter", CitizenFX.Core.Game.Player.ServerId, room, Data.Character);
                 }
 
-                if (room.Id == roomId)
+                if (room.Id == RoomId)
                 {
                     World.DrawMarker(MarkerType.HorizontalCircleSkinny, Inside, Vector3.Zero, Vector3.Zero, new Vector3(1, 1, 0), System.Drawing.Color.FromArgb(70, 50, 50, 50));
 

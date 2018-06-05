@@ -19,7 +19,7 @@ namespace FiveLife.Database.Migrations
 
             SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
             CodeGenerator = new MySql.Data.Entity.MySqlMigrationCodeGenerator();
-            
+
         }
 
         protected override void Seed(Context context)

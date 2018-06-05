@@ -109,6 +109,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>C:\FiveM\Source\FiveLife\FiveLife.NUI\bin\Debug\FiveLife.NUI.exe</PostBuildEvent>
+    <PostBuildEvent>D:\FiveM\Source\FiveLife\FiveLife.NUI\bin\Debug\FiveLife.NUI.exe</PostBuildEvent>
   </PropertyGroup>
 </Project>

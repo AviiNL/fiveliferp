@@ -23,23 +23,30 @@ namespace FiveLife.Client.Game
 
         private async void OnGameEnter(Character obj)
         {
-            CitizenFX.Core.Game.Player.Character.FadeOut();
             isSpawning = true;
+
+            Screen.Fading.FadeOut(100);
+            while (Screen.Fading.IsFadingOut)
+                await Delay(0);
+
+            CitizenFX.Core.Game.Player.Character.Show();
+            CitizenFX.Core.Game.Player.Character.FadeOut();
+            
             Data.Character = obj;
 
             CitizenFX.Core.Game.Player.CanControlCharacter = false;
             await CitizenFX.Core.Game.Player.Spawn(obj);
-            
+            CitizenFX.Core.Game.Player.CanControlCharacter = true;
+
+            // TODO: Move to UI handler
+            Screen.Hud.IsVisible = true;
+            Screen.Hud.IsRadarVisible = true;
+
             Screen.Fading.FadeIn(500);
             while (Screen.Fading.IsFadingIn)
                 await Delay(0);
             
             Screen.Effects.Stop();
-            Screen.Effects.Start(ScreenEffect.SwitchHudOut, 500);
-
-            Screen.Hud.IsVisible = true;
-            Screen.Hud.IsRadarVisible = true;
-            CitizenFX.Core.Game.Player.CanControlCharacter = true;
 
             isSpawning = false;
             gameEntered = true;

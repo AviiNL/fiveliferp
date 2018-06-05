@@ -11,20 +11,49 @@ namespace FiveLife.Client.CharacterCreator.Menu
     {
         private MenuPool pool;
 
-        private MainMenu mainMenu = new MainMenu();
+        private Dictionary<string, UIMenu> menus = new Dictionary<string, UIMenu>();
+        private UIMenu current = null;
 
         public Menu()
         {
             pool = new MenuPool();
 
-            pool.Add(mainMenu);
+            menus.Add("main", new MainMenu(this));
+            menus.Add("customize", new CustomizeMenu(this));
 
+            foreach (var menu in menus.Values)
+            {
+                menu.AddInstructionalButton(new InstructionalButton(CitizenFX.Core.Control.CursorScrollUp, "Zoom"));
+                pool.Add(menu);
+            }
         }
 
-        public void Open()
+        public void Open(string menu = null)
         {
+            if(menu == null)
+            {
+                Close();
+                current = menus["main"];
+                current.Visible = true;
+                return;
+            }
+
             Close();
-            mainMenu.Visible = true;
+            current.Visible = false;
+            menus[menu].ParentMenu = current;
+            current = menus[menu];
+            current.Visible = true;
+        }
+
+        public void Back()
+        {
+            var temp = current; // this logic should be in the menu itself, at least partly
+            current.Visible = false;
+            if (current.ParentMenu != null)
+            {
+                current = current.ParentMenu;
+                temp.ParentMenu = null;
+            }
         }
 
         public void Close()
@@ -39,6 +68,7 @@ namespace FiveLife.Client.CharacterCreator.Menu
 
         public void Update()
         {
+
             pool.Draw();
             pool.ProcessControl();
         }

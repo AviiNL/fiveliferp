@@ -11,6 +11,8 @@ namespace FiveLife.Shared.Entity
     {
         public Shared.Entity.Character Character { get; set; }
         public string Message { get; set; }
+        public int RoomId { get; set; }
         public Vector3 Position { get; set; }
+
     }
 }

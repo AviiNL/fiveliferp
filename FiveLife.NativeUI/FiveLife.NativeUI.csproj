@@ -36,7 +36,6 @@
   <ItemGroup>
     <Reference Include="CitizenFX.Core">
       <HintPath>..\..\..\Client\FiveM.app\citizen\clr2\lib\mono\4.5\CitizenFX.Core.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,6 +63,7 @@
     <Compile Include="UIMenuColoredItem.cs" />
     <Compile Include="UIMenuItem.cs" />
     <Compile Include="UIMenuListItem.cs" />
+    <Compile Include="UIMenuListItemItem.cs" />
     <Compile Include="UIResRectangle.cs" />
     <Compile Include="UIResText.cs" />
     <Compile Include="UnknownColors.cs" />

@@ -22,6 +22,9 @@ namespace FiveLife.Client.Chat
             API.RegisterCommand("spawn", new Action<int, List<object>, string>(Spawn), true);
             API.RegisterCommand("giveall", new Action<int, List<object>, string>(GiveWeapon), true);
             API.RegisterCommand("weather", new Action<int, List<object>, string>(AdjustWeather), true);
+            API.RegisterCommand("opacity", new Action<int, List<object>, string>(Opacity), true);
+            API.RegisterCommand("hide", new Action(Hide), true);
+
 
             API.RegisterCommand("fix", new Action(Fix), false);
             API.RegisterCommand("extra", new Action<int, List<object>, string>(Extra), false);
@@ -29,6 +32,19 @@ namespace FiveLife.Client.Chat
             API.RegisterCommand("test", new Action(Test), false);
             API.RegisterCommand("license", new Action(License), false);
 
+        }
+
+        private void Hide()
+        {
+            CitizenFX.Core.Game.Player.Character.IsVisible =
+                !CitizenFX.Core.Game.Player.Character.IsVisible;
+        }
+
+        private void Opacity(int arg1, List<object> arg2, string arg3)
+        {
+            var value = Int32.Parse((string)arg2[0]);
+
+            CitizenFX.Core.Game.Player.Character.Opacity = value;
         }
 
         private void License()
@@ -46,51 +62,62 @@ namespace FiveLife.Client.Chat
 
             veh.Repair();
             veh.ClearLastWeaponDamage();
+            Debug.WriteLine($"Dirt level: {veh.DirtLevel}");
+            veh.DirtLevel = 0;
         }
 
         private async void Test()
         {
             var playerPed = CitizenFX.Core.Game.Player.Character;
-            var switchToCoords = new Vector3(129.063f, 6616.838f, 31.827f);
-            var switchToModel = new Model(PedHash.FilmDirector);
-            var currentPos = CitizenFX.Core.Game.Player.Character.Position;
-            var switchType = API.GetIdealPlayerSwitchType(currentPos.X, currentPos.Y, currentPos.Z, switchToCoords.X, switchToCoords.Y, switchToCoords.Z);
-            var switchFlag = 1024;
+            var veh = playerPed.CurrentVehicle;
 
-            if (switchType == 3)
-            {
-                switchType = 2;
-                if (switchToCoords.DistanceToSquared(currentPos) < 40)
-                {
-                    Debug.WriteLine("Too close?!");
-                    return;
-                }
-            }
+            if (veh == null) return;
 
-            switchToModel.Request();
-            while (!switchToModel.IsLoaded)
-                await Delay(0);
+            var bone = veh.Bones["numberplate"];
+            Debug.WriteLine($"Numberplate: {(bone.IsValid ? bone.Position.ToString() : "INVALID")}"); ;
 
-            var switchToPed = await World.CreatePed(switchToModel, switchToCoords, 0);
-            switchToPed.IsVisible = false;
-            switchToPed.IsInvincible = true;
-            API.SetEntityAsMissionEntity(switchToPed.Handle, true, false);
-            switchToPed.Task.ClearAllImmediately();
 
-            if (!playerPed.IsInjured)
-                API.SetPedDesiredHeading(switchToPed.Handle, playerPed.Heading);
+            //var playerPed = CitizenFX.Core.Game.Player.Character;
+            //var switchToCoords = new Vector3(129.063f, 6616.838f, 31.827f);
+            //var switchToModel = new Model(PedHash.FilmDirector);
+            //var currentPos = CitizenFX.Core.Game.Player.Character.Position;
+            //var switchType = API.GetIdealPlayerSwitchType(currentPos.X, currentPos.Y, currentPos.Z, switchToCoords.X, switchToCoords.Y, switchToCoords.Z);
+            //var switchFlag = 1024;
 
-            switchToPed.IsCollisionEnabled = false;
-            switchToPed.IsVisible = false;
+            //if (switchType == 3)
+            //{
+            //    switchType = 2;
+            //    if (switchToCoords.DistanceToSquared(currentPos) < 40)
+            //    {
+            //        Debug.WriteLine("Too close?!");
+            //        return;
+            //    }
+            //}
 
-            API.StartPlayerSwitch(playerPed.Handle, switchToPed.Handle, switchFlag, switchType);
+            //switchToModel.Request();
+            //while (!switchToModel.IsLoaded)
+            //    await Delay(0);
 
-            while (API.GetPlayerSwitchState() != 8)
-                await Delay(0);
+            //var switchToPed = await World.CreatePed(switchToModel, switchToCoords, 0);
+            //switchToPed.IsVisible = false;
+            //switchToPed.IsInvincible = true;
+            //API.SetEntityAsMissionEntity(switchToPed.Handle, true, false);
+            //switchToPed.Task.ClearAllImmediately();
 
-            API.SetFocusEntity(switchToPed.Handle);
-            API.SetEntityCoords(playerPed.Handle, switchToCoords.X, switchToCoords.Y, switchToCoords.Z, false, false, false, false);
-            switchToPed.Delete();
+            //if (!playerPed.IsInjured)
+            //    API.SetPedDesiredHeading(switchToPed.Handle, playerPed.Heading);
+
+            //switchToPed.IsCollisionEnabled = false;
+            //switchToPed.IsVisible = false;
+
+            //API.StartPlayerSwitch(playerPed.Handle, switchToPed.Handle, switchFlag, switchType);
+
+            //while (API.GetPlayerSwitchState() != 8)
+            //    await Delay(0);
+
+            //API.SetFocusEntity(switchToPed.Handle);
+            //API.SetEntityCoords(playerPed.Handle, switchToCoords.X, switchToCoords.Y, switchToCoords.Z, false, false, false, false);
+            //switchToPed.Delete();
         }
 
         private void AdjustWeather(int arg1, List<object> arg2, string arg3)
@@ -144,16 +171,25 @@ namespace FiveLife.Client.Chat
 
             if (CitizenFX.Core.Game.Player.Character.CurrentVehicle != null)
                 CitizenFX.Core.Game.Player.Character.CurrentVehicle.Delete();
-
-            var veh = await World.CreateVehicle(model, CitizenFX.Core.Game.Player.Character.Position, CitizenFX.Core.Game.Player.Character.Heading);
-
-            if (args.Count > 1)
+            try
             {
-                var livery = Int32.Parse((string)args[1]);
-                veh.Mods.Livery = Math.Min(livery, veh.Mods.LiveryCount);
+                var veh = await World.CreateVehicle(model, CitizenFX.Core.Game.Player.Character.Position, CitizenFX.Core.Game.Player.Character.Heading);
+
+
+                if (args.Count > 1)
+                {
+                    var livery = Int32.Parse((string)args[1]);
+                    veh.Mods.Livery = Math.Min(livery, veh.Mods.LiveryCount);
+                }
+
+                CitizenFX.Core.Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Driver);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
 
-            CitizenFX.Core.Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Driver);
 
 
             // var v = SCharacter.Character.Vehicles.Where(s => s.Model == (uint)model.Hash).FirstOrDefault();

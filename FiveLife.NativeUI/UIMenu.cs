@@ -812,7 +812,7 @@ namespace FiveLife.NativeUI
 
     public delegate void ItemCheckboxEvent(UIMenuCheckboxItem sender, bool Checked);
 
-    public delegate void ItemListEvent(UIMenuListItem sender, int newIndex);
+    public delegate void ItemListEvent(UIMenuListItem sender, UIMenuListItemItem item);
 
     /// <summary>
     /// Base class for FiveLife.NativeUI. Calls the next events: OnIndexChange, OnListChanged, OnCheckboxChange, OnItemSelect, OnMenuClose, OnMenuchange.
@@ -995,11 +995,11 @@ namespace FiveLife.NativeUI
 
             
             SetKey(MenuControls.Up, Control.PhoneUp);
-            SetKey(MenuControls.Up, Control.CursorScrollUp);
+            //SetKey(MenuControls.Up, Control.CursorScrollUp);
 
             SetKey(MenuControls.Down, Control.PhoneDown);
-            SetKey(MenuControls.Down, Control.CursorScrollDown);
-
+            //SetKey(MenuControls.Down, Control.CursorScrollDown);
+            
             SetKey(MenuControls.Left, Control.PhoneLeft);
             SetKey(MenuControls.Right, Control.PhoneRight);
             SetKey(MenuControls.Select, Control.FrontendAccept);
@@ -1321,7 +1321,7 @@ namespace FiveLife.NativeUI
                     item.Draw();
                     count++;
                 }*/
-
+                
                 int count = MenuItems.Count;
                 for(int i = 0; i < count; i++)
                 {
@@ -1558,7 +1558,7 @@ namespace FiveLife.NativeUI
         /// </summary>
         public void GoLeft()
         {
-            if (!(MenuItems[CurrentSelection] is UIMenuListItem)) return;
+            if (!(MenuItems[CurrentSelection] is UIMenuListItem m) || !m.Enabled || m.Items.Count == 0) return;
             var it = (UIMenuListItem)MenuItems[CurrentSelection];
             it.Index = it.Index - 1;
             Game.PlaySound(AUDIO_LEFTRIGHT, AUDIO_LIBRARY);
@@ -1572,7 +1572,7 @@ namespace FiveLife.NativeUI
         /// </summary>
         public void GoRight()
         {
-            if (!(MenuItems[CurrentSelection] is UIMenuListItem)) return;
+            if (!(MenuItems[CurrentSelection] is UIMenuListItem m) || !m.Enabled || m.Items.Count == 0) return;
             var it = (UIMenuListItem)MenuItems[CurrentSelection];
             it.Index++;
             Game.PlaySound(AUDIO_LEFTRIGHT, AUDIO_LIBRARY);

@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Infrastructure.DependencyResolution;
+using System.Data.SQLite.EF6;
+
+namespace FiveLife.Database.SqLite
+{
+    public class SQLiteProviderInvariantName : IProviderInvariantName
+    {
+        public static readonly SQLiteProviderInvariantName Instance = new SQLiteProviderInvariantName();
+        private SQLiteProviderInvariantName() {}
+        public const string ProviderName = "System.Data.SQLite.EF6";
+        public string Name { get { return ProviderName; } }
+    }
+
+    class SQLiteDbDependencyResolver : IDbDependencyResolver
+    {
+        public SQLiteDbDependencyResolver()
+        {
+            Console.WriteLine("SQLiteDbDependencyResolver#Constructor");
+        }
+
+        public object GetService(Type type, object key)
+        {
+            Console.WriteLine("GetService " + type.Name);
+            if (type == typeof(IProviderInvariantName))
+            {
+                return SQLiteProviderInvariantName.Instance;
+            }
+            if (type == typeof(DbProviderFactory))
+            {
+                return SQLiteProviderFactory.Instance;
+            }
+
+            return SQLiteProviderFactory.Instance.GetService(type);
+        }
+
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            Console.WriteLine("GetService " + type.Name);
+            var service = GetService(type, key);
+            if (service != null) yield return service;
+        }
+
+    }
+
+    class SqLiteDbConfiguration : DbConfiguration
+    {
+        public SqLiteDbConfiguration()
+        {
+            AddDependencyResolver(new SQLiteDbDependencyResolver());
+        }
+    }
+}

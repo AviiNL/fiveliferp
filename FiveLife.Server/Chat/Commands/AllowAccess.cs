@@ -12,7 +12,7 @@ namespace FiveLife.Server.Chat.Commands
     {
         public override async void Handle(CitizenFX.Core.Player source, ChatMessage data)
         {
-            var rooms = Database.Repository<Room>.Find(e => e.Owner.Id == data.Character.Id);
+            var rooms = Database.SqLite.Repository<Room>.Find(e => e.Owner.Id == data.Character.Id);
             var ids = data.Message.Split(' ').Skip(1).Select(e => {
                 if (int.TryParse(e, out int a))
                     return a;
@@ -34,7 +34,7 @@ namespace FiveLife.Server.Chat.Commands
                     var dirty = false;
                     foreach (var id in ids)
                     {
-                        var character = Database.Repository<Character>.GetById(id);
+                        var character = Database.SqLite.Repository<Character>.GetById(id);
                         if (character != null)
                         {
                             room.Allowed.Add(character);
@@ -47,7 +47,7 @@ namespace FiveLife.Server.Chat.Commands
 
                     if (dirty)
                     {
-                        Database.Repository<Room>.Update(room);
+                        Database.SqLite.Repository<Room>.Update(room);
                         responseLines.Add(line);
                     }
                 }

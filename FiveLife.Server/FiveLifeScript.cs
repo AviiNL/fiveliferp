@@ -57,8 +57,6 @@ namespace FiveLife.Server
 
             EventHandlers.Add(msg, new Action<dynamic>((body1) =>
             {
-                Console.WriteLine(msg);
-
                 dynamic arg1 = sources.Contains(0) ?
                        new PlayerList()[body1.GetType() == typeof(string) ? Int32.Parse(body1) : body1] :
                        JsonConvert.DeserializeObject<T>(body1);
@@ -78,8 +76,6 @@ namespace FiveLife.Server
 
             EventHandlers.Add(msg, new Action<dynamic, dynamic>((body1, body2) =>
             {
-                Console.WriteLine(msg);
-
                 dynamic arg1 = sources.Contains(0) ?
                         new PlayerList()[body1.GetType() == typeof(string) ? Int32.Parse(body1) : body1] :
                         JsonConvert.DeserializeObject<T1>(body1);
@@ -102,8 +98,6 @@ namespace FiveLife.Server
 
             EventHandlers.Add(msg, new Action<dynamic, dynamic, dynamic>((body1, body2, body3) =>
             {
-                Console.WriteLine(msg);
-
                 dynamic arg1 = sources.Contains(0) ?
                         new PlayerList()[body1.GetType() == typeof(string) ? Int32.Parse(body1) : body1] :
                         JsonConvert.DeserializeObject<T1>(body1);
@@ -130,8 +124,6 @@ namespace FiveLife.Server
 
             EventHandlers.Add(msg, new Action<dynamic, dynamic, dynamic, dynamic>((body1, body2, body3, body4) =>
             {
-                Console.WriteLine(msg);
-
                 dynamic arg1 = sources.Contains(0) ?
                         new PlayerList()[body1.GetType() == typeof(string) ? Int32.Parse(body1) : body1] :
                         JsonConvert.DeserializeObject<T1>(body1);
@@ -162,8 +154,6 @@ namespace FiveLife.Server
 
             EventHandlers.Add(msg, new Action<dynamic, dynamic, dynamic, dynamic, dynamic>((body1, body2, body3, body4, body5) =>
             {
-                Console.WriteLine(msg);
-
                 dynamic arg1 = sources.Contains(0) ?
                         new PlayerList()[body1.GetType() == typeof(string) ? Int32.Parse(body1) : body1] :
                         JsonConvert.DeserializeObject<T1>(body1);
@@ -198,8 +188,6 @@ namespace FiveLife.Server
 
             EventHandlers.Add(msg, new Action<dynamic, dynamic, dynamic, dynamic, dynamic, dynamic>((body1, body2, body3, body4, body5, body6) =>
             {
-                Console.WriteLine(msg);
-
                 dynamic arg1 = sources.Contains(0) ?
                         new PlayerList()[body1.GetType() == typeof(string) ? Int32.Parse(body1) : body1] :
                         JsonConvert.DeserializeObject<T1>(body1);

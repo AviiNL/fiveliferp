@@ -11,15 +11,16 @@ namespace FiveLife.Client.CharacterCreator
 {
     public class CharacterCreator
     {
+        public bool Active = false;
 
         Camera.Camera camera;
         Menu.Menu menu;
 
         #region Police locker room
         private Vector3 CameraPosition = new Vector3(x: 455.8541f, y: -991.0778f, z: 31.10116f);
-        private Vector3 CameraViewOffset = new Vector3(0, 0, 0);
+        private Vector3 CameraViewOffset = new Vector3(0, 0, 0.08f);
         private float CameraFieldOfView = 40;
-
+        private float zoom = 3;
         //private Vector3 FaceCameraPosition = new Vector3(x: 455.4531f, y: -991.0778f, z: 31.33116f);
         //private Vector3 FaceCameraRotation = new Vector3(x: 0f, y: 0, z: 25.83904f);
         //private float FaceCameraFieldOfView = 10;
@@ -35,10 +36,15 @@ namespace FiveLife.Client.CharacterCreator
             
         }
 
+        private float angle = 145.2505f;
+
         public async Task Start()
         {
-
+            Active = true;
             await CitizenFX.Core.Game.Player.Spawn(PlayerPosition, PlayerHeading);
+            await BaseScript.Delay(500);
+            await CitizenFX.Core.Game.Player.SetModel(PedHash.FreemodeMale01);
+            CitizenFX.Core.Game.Player.Character.Style.SetDefaultClothes();
 
             Function.Call(Hash.SET_PLAYER_CONTROL, CitizenFX.Core.Game.Player, false, 1280);
             Function.Call(Hash.SET_ENTITY_COLLISION, CitizenFX.Core.Game.Player.Character, true);
@@ -50,27 +56,57 @@ namespace FiveLife.Client.CharacterCreator
             Screen.Effects.Stop();
             Screen.Effects.Start(ScreenEffect.SwitchHudOut);
 
+            CitizenFX.Core.Game.Player.Character.Show();
+
             camera = new Camera.Camera(CameraPosition, Vector3.Zero, CameraFieldOfView);
             camera.Enabled = true;
 
             menu = new Menu.Menu();
+
             menu.Open();
         }
 
         public void Update()
         {
-            if (camera != null)
-            {
-                camera.LookAt(new Vector3(0, -1, 0) + CitizenFX.Core.Game.Player.Character.Position + CameraViewOffset);
-                camera.Update();
-            }
-
+            if (camera == null) return;
+            
             if(menu != null && menu.IsOpen())
             {
                 menu.Update();
             }
 
-            
+            if(CitizenFX.Core.Game.IsControlPressed(0, Control.CursorScrollUp))
+                zoom -= 0.15f;
+
+            if (CitizenFX.Core.Game.IsControlPressed(0, Control.CursorScrollDown))
+                zoom += 0.15f;
+
+            zoom = Math.Min(zoom, 3);
+            zoom = Math.Max(zoom, 0.75f);
+
+            float mouseX = CitizenFX.Core.Game.GetDisabledControlNormal(0, Control.LookLeft);
+            float mouseY = CitizenFX.Core.Game.GetDisabledControlNormal(0, Control.LookDown);
+
+            var cam = CitizenFX.Core.Game.Player.Character;
+
+            angle -= mouseX * CitizenFX.Core.Game.LastFrameTime * 400;
+
+            angle = Math.Min(angle, 290);
+            angle = Math.Max(angle, 95);
+
+            CameraPosition = new Vector3(cam.Position.X + zoom * (float)Math.Sin((angle / 180) * Math.PI), cam.Position.Y + zoom * (float)Math.Cos((angle / 180) * Math.PI), CameraPosition.Z);
+
+            CameraPosition.Z -= mouseY * CitizenFX.Core.Game.LastFrameTime * 10;
+            CameraPosition.Z = Math.Min(CameraPosition.Z, 31.4f);
+            CameraPosition.Z = Math.Max(CameraPosition.Z, 29.888f);
+
+            var lookAt = CitizenFX.Core.Game.Player.Character.Position;
+            lookAt.Z = CameraPosition.Z;
+
+            camera.Position = CameraPosition;
+            camera.LookAt(lookAt);
+            camera.Update();
+
         }
     }
 }

@@ -72,6 +72,8 @@
     <Compile Include="Chat\Chat.cs" />
     <Compile Include="Chat\Commands\911.cs" />
     <Compile Include="Chat\Commands\AllowAccess.cs" />
+    <Compile Include="Chat\Commands\AllowEntry.cs" />
+    <Compile Include="Chat\Commands\DenyEntry.cs" />
     <Compile Include="Chat\Commands\GOOC.cs" />
     <Compile Include="Chat\Commands\Me.cs" />
     <Compile Include="Chat\Commands\OOC.cs" />
@@ -89,9 +91,9 @@
     <Compile Include="Sync\Room.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FiveLife.Database\FiveLife.Database.csproj">
-      <Project>{d8901ca6-5828-4637-b452-74dce65103ce}</Project>
-      <Name>FiveLife.Database</Name>
+    <ProjectReference Include="..\FiveLife.Database.SqLite\FiveLife.Database.SqLite.csproj">
+      <Project>{9f5a4a18-9bdb-40a8-9fd6-ed0a660480cf}</Project>
+      <Name>FiveLife.Database.SqLite</Name>
     </ProjectReference>
     <ProjectReference Include="..\FiveLife.Shared\FiveLife.Shared.csproj">
       <Project>{8cc8f232-efb8-47ee-bc7e-5893e7d0c7a3}</Project>

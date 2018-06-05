@@ -29,39 +29,40 @@ namespace FiveLife.Client.Login
 
         public override async void Initialize()
         {
-            await CitizenFX.Core.Game.Player.SetModel(PedHash.Michael);
 
             API.ShutdownLoadingScreenNui();
             API.ShutdownLoadingScreen();
 
-            if(Game.Data.Player.Characters.Count == 0)
+            await CitizenFX.Core.Game.Player.SetModel(PedHash.Michael);
+            await CitizenFX.Core.Game.Player.Spawn(pos, 23, false);
+
+            Screen.Hud.IsRadarVisible = false;
+
+            Screen.Fading.FadeIn(1);
+            while (Screen.Fading.IsFadingIn)
+                await Delay(0);
+
+
+            if (Game.Data.Player.Characters.Count == 0)
             {
-                Screen.Fading.FadeOut(500);
-
-                while (Screen.Fading.IsFadingOut)
-                    await Delay(10);
-
-                NUI.Close();
-
                 await characterCreator.Start();
 
                 Screen.Fading.FadeIn(2500);
-
                 while (Screen.Fading.IsFadingIn)
                     await BaseScript.Delay(0);
 
                 return;
             }
 
-            await CitizenFX.Core.Game.Player.Spawn(pos, 23, false);
-            CitizenFX.Core.Game.Player.Character.IsCollisionEnabled = false;
-            CitizenFX.Core.Game.Player.CanControlCharacter = false;
-            CitizenFX.Core.Game.Player.Character.Opacity = 0;
-            CitizenFX.Core.Game.Player.Character.Task.ClearAllImmediately();
+            _instructionalButtons.Add(new InstructionalButton(Control.Context, "Select"));
+            _instructionalButtons.Add(new InstructionalButton(Control.InteractionMenu, "New Character"));
 
-            Screen.Fading.FadeIn(500);
-            while (Screen.Fading.IsFadingIn)
-                await Delay(0);
+            _instructionalButtons.Add(new InstructionalButton(Control.MoveRightOnly, "Next"));
+            _instructionalButtons.Add(new InstructionalButton(Control.MoveLeftOnly, "Previous"));
+
+            UpdateScaleform();
+            IsCharacterSelectionActive = true;
+
 
             cam = new Camera.Camera();
             cam.Position = new Vector3(412.3085f, -2109.825f, 201.6868f);
@@ -72,20 +73,17 @@ namespace FiveLife.Client.Login
                 var model = new Model((PedHash)character.ModelHash);
                 model.Request();
                 while (!model.IsLoaded) await Delay(0);
-                var ped = await World.CreatePed(model, pedPos, 180);
+                var ped = await World.CreatePed(model, pedPos, 0);
                 await ped.Apply(character);
                 peds.Add(ped, character);
-                ped.Task.ClearAllImmediately();
             }
 
-            _instructionalButtons.Add(new InstructionalButton(Control.PhoneSelect, "Select"));
-            _instructionalButtons.Add(new InstructionalButton(Control.InteractionMenu, "New Character"));
 
-            _instructionalButtons.Add(new InstructionalButton(Control.MoveRightOnly, "Next"));
-            _instructionalButtons.Add(new InstructionalButton(Control.MoveLeftOnly, "Previous"));
+            //Screen.Fading.FadeIn(2500);
 
-            UpdateScaleform();
-            IsCharacterSelectionActive = true;
+            //while (Screen.Fading.IsFadingIn)
+            //    await BaseScript.Delay(0);
+
         }
 
         public void UpdateScaleform()
@@ -121,24 +119,21 @@ namespace FiveLife.Client.Login
             Debug.WriteLine("{0}", $"Character selected! {obj.FirstName} {obj.LastName}");
 
             Screen.Fading.FadeOut(10);
-
             while (Screen.Fading.IsFadingOut)
-                await Delay(10);
+                await Delay(0);
 
             NUI.Close();
             cam.Enabled = false;
-            
-            foreach(var ped in peds.Keys)
-            {
-                ped.Delete();
-            }
 
             IsCharacterSelectionActive = false;
 
-            CitizenFX.Core.Game.Player.Character.IsCollisionEnabled = true;
-            CitizenFX.Core.Game.Player.CanControlCharacter = true;
-            CitizenFX.Core.Game.Player.Character.Opacity = 255;
-            CitizenFX.Core.Game.Player.Character.IsVisible = true;
+            foreach (var ped in peds.Keys)
+            {
+                ped.Model.MarkAsNoLongerNeeded();
+                ped.Delete();
+            }
+
+            showAll();
 
             FireEvent("fivelife.character.selected", obj);
             FireServerEvent("fivelife.character.selected", obj);
@@ -168,21 +163,31 @@ namespace FiveLife.Client.Login
 
         public override async Task Loop()
         {
+            if (characterCreator.Active)
+            {
+                characterCreator.Update();
+                return;
+            }
+
             if (!IsCharacterSelectionActive) return;
 
             if (cam != null)
                 cam.Update();
 
-            Screen.Hud.IsRadarVisible = false;
-
             CitizenFX.Core.Game.Player.Character.Position = pos;
 
             Function.Call(Hash.DRAW_SCALEFORM_MOVIE_FULLSCREEN, _instructionalButtonsScaleform.Handle, 255, 255, 255, 255, 0);
+
+            hideAll();
+
+            if (peds.Count <= 0) return;
 
             float angle = -45;
             float radius = 3;
             foreach (var ped in peds)
             {
+                ped.Key.Show();
+
                 var offset = new Vector3(cam.Position.X + radius * (float)Math.Sin((angle / 180) * Math.PI), cam.Position.Y + radius * (float)Math.Cos((angle / 180) * Math.PI), pos.Z);
                 ped.Key.Position = offset;
 
@@ -199,7 +204,7 @@ namespace FiveLife.Client.Login
                 angle += 90 / peds.Count;
             }
 
-            if (cam.Rotation == Vector3.Zero && peds.Count > 0)
+            if (cam.Rotation == Vector3.Zero)
             {
                 cam.MoveTo(new Camera.Waypoint(cam.Position, peds.Keys.ToArray()[lookAt].Position, 50, 0.5f));
                 peds.Keys.ToArray()[lookAt].Task.HandsUp(-1);
@@ -215,7 +220,6 @@ namespace FiveLife.Client.Login
                 {
                     ped.Key.Task.ClearAll();
                 }
-                peds.Keys.ToArray()[lookAt].Task.HandsUp(-1);
 
                 cam.MoveTo(new Camera.Waypoint(cam.Position, peds.Keys.ToArray()[lookAt].Position, 50, 0.5f));
             }
@@ -230,18 +234,66 @@ namespace FiveLife.Client.Login
                 {
                     ped.Key.Task.ClearAll();
                 }
-                peds.Keys.ToArray()[lookAt].Task.HandsUp(-1);
 
                 cam.MoveTo(new Camera.Waypoint(cam.Position, peds.Keys.ToArray()[lookAt].Position, 50, 0.5f));
             }
 
-            if(CitizenFX.Core.Game.IsControlJustReleased(0, Control.PhoneSelect))
+            if (CitizenFX.Core.Game.IsControlJustReleased(0, Control.Context))
             {
                 var character = peds.Values.ToArray()[lookAt];
                 CharacterSelected(character);
+                return;
             }
 
-            characterCreator.Update();
+            if (CitizenFX.Core.Game.IsControlJustReleased(0, Control.InteractionMenu))
+            {
+                foreach (var ped in peds.Keys)
+                {
+                    ped.Delete();
+                }
+
+                await characterCreator.Start();
+                return;
+            }
+
+            var selectedPed = peds.Keys.ToArray()[lookAt];
+            if (selectedPed.Exists() && !selectedPed.IsDead)
+            {
+                if (!API.GetIsTaskActive(selectedPed.Handle, 0))
+                {
+                    selectedPed.Task.HandsUp(-1);
+                }
+            }
         }
+
+        private void hideAll()
+        {
+            // Hide our playable ped
+            CitizenFX.Core.Game.Player.Character.Hide();
+
+            // Hide all player peds
+            foreach (var player in new PlayerList())
+                player.Character.Hide();
+
+            // Hide all NPC peds
+            foreach (var ped in new Game.PedsPool())
+                ped.Hide();
+
+        }
+
+        private void showAll()
+        {
+            // Show our player ped
+            CitizenFX.Core.Game.Player.Character.Show();
+
+            // Show all player peds
+            foreach (var player in new PlayerList())
+                player.Character.Show();
+
+            // Show all NPC peds
+            foreach (var ped in new Game.PedsPool())
+                ped.Show();
+        }
+
     }
 }

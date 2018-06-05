@@ -18,10 +18,10 @@ namespace CitizenFX.Core
 
             if (!freeze)
             {
-                if (!Function.Call<bool>(Hash.IS_ENTITY_VISIBLE, ped))
-                {
-                    Function.Call(Hash.SET_ENTITY_VISIBLE, ped, true);
-                }
+                //if (!Function.Call<bool>(Hash.IS_ENTITY_VISIBLE, ped))
+                //{
+                //    Function.Call(Hash.SET_ENTITY_VISIBLE, ped, true);
+                //}
 
                 if (!Function.Call<bool>(Hash.IS_PED_IN_ANY_VEHICLE, ped))
                 {
@@ -33,10 +33,10 @@ namespace CitizenFX.Core
             }
             else
             {
-                if (Function.Call<bool>(Hash.IS_ENTITY_VISIBLE, ped))
-                {
-                    Function.Call(Hash.SET_ENTITY_VISIBLE, ped, false);
-                }
+                //if (Function.Call<bool>(Hash.IS_ENTITY_VISIBLE, ped))
+                //{
+                //    Function.Call(Hash.SET_ENTITY_VISIBLE, ped, false);
+                //}
 
                 Function.Call(Hash.SET_ENTITY_COLLISION, ped, false);
                 Function.Call(Hash.FREEZE_ENTITY_POSITION, self, true);
@@ -125,7 +125,6 @@ namespace CitizenFX.Core
             Game.Player.Character.IsInvincible = false;
 
             Function.Call(Hash.CLEAR_PLAYER_WANTED_LEVEL, self);
-            Function.Call(Hash.SHUTDOWN_LOADING_SCREEN);
 
             self.Freeze(false);
             

@@ -16,7 +16,9 @@ namespace FiveLife.Server.Connection
         Dictionary<string, Player> Playing = new Dictionary<string, Player>();
 
         private int MAX_PLAYERS = 30; // 30??
-        
+
+        private bool blocked = true;
+
         public Whitelist()
         {
             Console.WriteLine("Loading Whitelist");
@@ -32,6 +34,8 @@ namespace FiveLife.Server.Connection
             EventHandlers.Add("playerDropped", new Action<Player, string>(OnPlayerDropped));
 
             EventHandlers["fivelife.queue.accepted"] += new Action<Player>(OnAccepted);
+
+            blocked = false;
         }
 
         private async void OnPlayerDropped([FromSource] Player player, string reason)
@@ -43,6 +47,15 @@ namespace FiveLife.Server.Connection
         private async void OnPlayerConnect([FromSource] Player player, string playerName, CallbackDelegate kickCallback, dynamic deferral)
         {
             deferral.defer();
+
+            if (blocked)
+            {
+                deferral.done("Server is still booting, please try again later");
+                await Delay(5000);
+                return;
+            }
+
+
             await Delay(100);
             deferral.update("Connecting...");
 
@@ -64,7 +77,7 @@ namespace FiveLife.Server.Connection
                 return;
             }
 
-            var dbPlayer = Repository<Shared.Entity.Player>.FindOne(e => e.SteamId == id, true);
+            var dbPlayer = Database.SqLite.Repository<Shared.Entity.Player>.FindOne(e => e.SteamId == id, true);
             if (dbPlayer == null || dbPlayer.Rank == 0)
             {
                 TriggerEvent("fivelife.whitelist.denied");
