@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,9 +30,14 @@ namespace FiveLife.Client.Login
 
         public override async void Initialize()
         {
+            API.SetNuiFocus(false, false);
+            API.RegisterNuiCallbackType("character_finished");
+            EventHandlers.Add("__cfx_nui:character_finished", new Action<ExpandoObject>(CharacterFinished));
 
             API.ShutdownLoadingScreenNui();
             API.ShutdownLoadingScreen();
+
+            // characterCreator.OnFinished += 
 
             await CitizenFX.Core.Game.Player.SetModel(PedHash.Michael);
             await CitizenFX.Core.Game.Player.Spawn(pos, 23, false);
@@ -42,7 +48,7 @@ namespace FiveLife.Client.Login
             while (Screen.Fading.IsFadingIn)
                 await Delay(0);
 
-
+            Debug.WriteLine($"Characters: {Game.Data.Player.Characters.Count}");
             if (Game.Data.Player.Characters.Count == 0)
             {
                 await characterCreator.Start();
@@ -63,7 +69,6 @@ namespace FiveLife.Client.Login
             UpdateScaleform();
             IsCharacterSelectionActive = true;
 
-
             cam = new Camera.Camera();
             cam.Position = new Vector3(412.3085f, -2109.825f, 201.6868f);
             cam.Enabled = true;
@@ -78,15 +83,22 @@ namespace FiveLife.Client.Login
                 peds.Add(ped, character);
             }
 
+        }
 
-            //Screen.Fading.FadeIn(2500);
+        private async void CharacterFinished(dynamic _data)
+        {
+            var data = JsonConvert.SerializeObject(_data);
+            var character = JsonConvert.DeserializeObject<Character>(data) as Character;
 
-            //while (Screen.Fading.IsFadingIn)
-            //    await BaseScript.Delay(0);
+            // upload character data to server
+            characterCreator.Close();
+
+            // Get ingame
+            CharacterSelected(character);
 
         }
 
-        public void UpdateScaleform()
+            public void UpdateScaleform()
         {
             _instructionalButtonsScaleform.CallFunction("CLEAR_ALL");
             _instructionalButtonsScaleform.CallFunction("TOGGLE_MOUSE_BUTTONS", 0);
@@ -105,15 +117,6 @@ namespace FiveLife.Client.Login
 
         }
 
-        private async void CharacterFinished(Character obj)
-        {
-
-
-
-            // when done, do this to get in game
-            //CharacterSelected(obj);
-        }
-
         private async void CharacterSelected(Character obj)
         {
             Debug.WriteLine("{0}", $"Character selected! {obj.FirstName} {obj.LastName}");
@@ -123,7 +126,9 @@ namespace FiveLife.Client.Login
                 await Delay(0);
 
             NUI.Close();
-            cam.Enabled = false;
+
+            if(cam != null)
+                cam.Enabled = false;
 
             IsCharacterSelectionActive = false;
 

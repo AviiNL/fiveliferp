@@ -1,8 +1,10 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using CitizenFX.Core.UI;
+using FiveLife.Shared.Entity;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,9 @@ namespace FiveLife.Client.CharacterCreator
 {
     public class CharacterCreator
     {
+        public delegate void Finish(Character character);
+        public event Finish OnFinish;
+
         public bool Active = false;
 
         Camera.Camera camera;
@@ -33,7 +38,10 @@ namespace FiveLife.Client.CharacterCreator
 
         public CharacterCreator()
         {
-            
+            Game.Data.Character = new Character();
+            Game.Data.Character.Player = Game.Data.Player;
+            Game.Data.Character.HeadShapeMix = 0.50f;
+
         }
 
         private float angle = 145.2505f;
@@ -43,6 +51,9 @@ namespace FiveLife.Client.CharacterCreator
             Active = true;
             await CitizenFX.Core.Game.Player.Spawn(PlayerPosition, PlayerHeading);
             await BaseScript.Delay(500);
+
+            Game.Data.Character.ModelHash = (long)PedHash.FreemodeMale01;
+
             await CitizenFX.Core.Game.Player.SetModel(PedHash.FreemodeMale01);
             CitizenFX.Core.Game.Player.Character.Style.SetDefaultClothes();
 
@@ -64,15 +75,23 @@ namespace FiveLife.Client.CharacterCreator
             menu = new Menu.Menu();
 
             menu.Open();
+
         }
 
         public void Update()
         {
             if (camera == null) return;
-            
-            if(menu != null && menu.IsOpen())
+
+            if (API.IsPauseMenuActive()) return;
+
+            if (menu != null && menu.IsOpen())
             {
                 menu.Update();
+            }
+
+            if(menu != null && !menu.IsOpen())
+            {
+                menu.Open();
             }
 
             if(CitizenFX.Core.Game.IsControlPressed(0, Control.CursorScrollUp))
@@ -84,8 +103,8 @@ namespace FiveLife.Client.CharacterCreator
             zoom = Math.Min(zoom, 3);
             zoom = Math.Max(zoom, 0.75f);
 
-            float mouseX = CitizenFX.Core.Game.GetDisabledControlNormal(0, Control.LookLeft);
-            float mouseY = CitizenFX.Core.Game.GetDisabledControlNormal(0, Control.LookDown);
+            float mouseX = -CitizenFX.Core.Game.GetDisabledControlNormal(0, Control.LookLeft);
+            float mouseY = -CitizenFX.Core.Game.GetDisabledControlNormal(0, Control.LookDown);
 
             var cam = CitizenFX.Core.Game.Player.Character;
 
@@ -107,6 +126,13 @@ namespace FiveLife.Client.CharacterCreator
             camera.LookAt(lookAt);
             camera.Update();
 
+        }
+
+        public void Close()
+        {
+            Active = false;
+            menu.Close();
+            camera.Enabled = false;
         }
     }
 }

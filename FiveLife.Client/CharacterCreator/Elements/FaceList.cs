@@ -10,11 +10,10 @@ namespace FiveLife.Client.CharacterCreator.Elements
 {
     public class FaceList : UIMenuListItem
     {
-        public FaceList(Menu.MainMenu parent)
+        public FaceList(UIMenu parent)
             :base("Face")
         {
             UpdateList();
-            parent.OnPedChanged += Parent_OnPedChanged;
             this.OnListChanged += FaceList_OnListChanged;
             this.OnListSelected += FaceList_OnListSelected;
         }
@@ -27,11 +26,6 @@ namespace FiveLife.Client.CharacterCreator.Elements
             {
                 Debug.WriteLine("freemode, open submenu");
             }
-        }
-
-        private void Parent_OnPedChanged(Ped ped)
-        {
-            UpdateList();
         }
 
         private void UpdateList()

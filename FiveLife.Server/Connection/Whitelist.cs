@@ -1,6 +1,7 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using FiveLife.Database;
+using FiveLife.Database.SqLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace FiveLife.Server.Connection
 
         private async void OnConnected()
         {
+            Repository<Shared.Entity.Player>.GetAll();
+
             EventHandlers.Add("playerConnecting", new Action<Player, string, CallbackDelegate, dynamic>(OnPlayerConnect));
             EventHandlers.Add("playerDropped", new Action<Player, string>(OnPlayerDropped));
 
@@ -55,7 +58,6 @@ namespace FiveLife.Server.Connection
                 return;
             }
 
-
             await Delay(100);
             deferral.update("Connecting...");
 
@@ -64,7 +66,7 @@ namespace FiveLife.Server.Connection
 
             #region - Whitelist -
 
-            if (!id.StartsWith("steam:"))
+            if (id == null || !id.StartsWith("steam:"))
             {
                 TriggerEvent("fivelife.whitelist.denied");
 
@@ -78,7 +80,7 @@ namespace FiveLife.Server.Connection
             }
 
             var dbPlayer = Database.SqLite.Repository<Shared.Entity.Player>.FindOne(e => e.SteamId == id, true);
-            if (dbPlayer == null || dbPlayer.Rank == 0)
+            if (dbPlayer == null)
             {
                 TriggerEvent("fivelife.whitelist.denied");
 
@@ -88,6 +90,19 @@ namespace FiveLife.Server.Connection
                 await Delay(5000);
                 deferral.done("You are not whitelisted");
                 
+                return;
+            }
+
+            if(dbPlayer.Rank == 0)
+            {
+                TriggerEvent("fivelife.whitelist.denied");
+
+                Console.WriteLine($"Access Denied {name} [{id}] banned");
+
+                deferral.update("You are not whitelisted");
+                await Delay(5000);
+                deferral.done("You are not whitelisted");
+
                 return;
             }
 

@@ -18,14 +18,8 @@ namespace FiveLife.Database.SqLite
 
     class SQLiteDbDependencyResolver : IDbDependencyResolver
     {
-        public SQLiteDbDependencyResolver()
-        {
-            Console.WriteLine("SQLiteDbDependencyResolver#Constructor");
-        }
-
         public object GetService(Type type, object key)
         {
-            Console.WriteLine("GetService " + type.Name);
             if (type == typeof(IProviderInvariantName))
             {
                 return SQLiteProviderInvariantName.Instance;
@@ -40,7 +34,6 @@ namespace FiveLife.Database.SqLite
 
         public IEnumerable<object> GetServices(Type type, object key)
         {
-            Console.WriteLine("GetService " + type.Name);
             var service = GetService(type, key);
             if (service != null) yield return service;
         }

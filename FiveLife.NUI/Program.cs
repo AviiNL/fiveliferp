@@ -66,7 +66,7 @@ namespace FiveLife.NUI
         {
             var startInfo = new ProcessStartInfo();
             startInfo.WorkingDirectory = @"D:\FiveM\Source\FiveLife\FiveLife.NUI\html\";
-            startInfo.FileName = @"c:\Users\Yme-Jan\AppData\Roaming\npm\yarn";
+            startInfo.FileName = @"c:\Users\AviiNL\AppData\Roaming\npm\yarn";
             startInfo.Arguments = "run build";
 
             Process proc = Process.Start(startInfo);

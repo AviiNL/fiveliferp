@@ -20,20 +20,30 @@ namespace FiveLife.Client.CharacterCreator.Menu
 
             menus.Add("main", new MainMenu(this));
             menus.Add("customize", new CustomizeMenu(this));
+            menus.Add("freemode_heritage", new Freemode.HeritageMenu(this));
+            menus.Add("freemode_clothing", new Freemode.ClothingMenu(this));
 
             foreach (var menu in menus.Values)
             {
                 menu.AddInstructionalButton(new InstructionalButton(CitizenFX.Core.Control.CursorScrollUp, "Zoom"));
+                menu.OnMenuBack += Menu_OnMenuBack;
                 pool.Add(menu);
             }
         }
 
+        private void Menu_OnMenuBack(UIMenu sender)
+        {
+            if(sender.ParentMenu != null)
+                current = sender.ParentMenu;
+        }
+
         public void Open(string menu = null)
         {
-            if(menu == null)
+            if (menu == null)
             {
                 Close();
                 current = menus["main"];
+                current.OnActivated();
                 current.Visible = true;
                 return;
             }
@@ -42,18 +52,8 @@ namespace FiveLife.Client.CharacterCreator.Menu
             current.Visible = false;
             menus[menu].ParentMenu = current;
             current = menus[menu];
+            current.OnActivated();
             current.Visible = true;
-        }
-
-        public void Back()
-        {
-            var temp = current; // this logic should be in the menu itself, at least partly
-            current.Visible = false;
-            if (current.ParentMenu != null)
-            {
-                current = current.ParentMenu;
-                temp.ParentMenu = null;
-            }
         }
 
         public void Close()
@@ -68,7 +68,6 @@ namespace FiveLife.Client.CharacterCreator.Menu
 
         public void Update()
         {
-
             pool.Draw();
             pool.ProcessControl();
         }

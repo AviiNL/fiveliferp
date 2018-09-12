@@ -8,7 +8,7 @@ namespace FiveLife.Database.Migrations
     internal sealed class Configuration : DbMigrationsConfiguration<Context>
     {
 
-        public static string ConnectionString = "server=192.168.0.24;Port=3306;database=fivelife;uid=fivelife;password=furgeWyPAkuDSyJq;persist security info=true";
+        public static string ConnectionString = "server=192.168.0.28;Port=3306;database=fivelife;uid=fivelife;password=furgeWyPAkuDSyJq;persist security info=true";
 
         public Configuration()
         {

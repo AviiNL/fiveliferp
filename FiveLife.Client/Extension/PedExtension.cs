@@ -19,6 +19,9 @@ namespace CitizenFX.Core
                 model.Request();
                 while (!model.IsLoaded) await BaseScript.Delay(0);
                 await Game.Player.ChangeModel(model);
+
+                model.MarkAsNoLongerNeeded();
+                Game.Player.Character.Style.SetDefaultClothes();
             }
             #endregion
 
@@ -96,41 +99,47 @@ namespace CitizenFX.Core
             #endregion
 
             #region FaceFeatures
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 0, obj.NoseWidth);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 1, obj.NosePeakHight);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 2, obj.NosePeakLenght);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 3, obj.NoseBoneHigh);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 4, obj.NosePeakLowering);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 5, obj.NoseBoneTwist);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 6, obj.EyeBrownHigh);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 7, obj.EyeBrownForward);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 8, obj.CheeksBoneHigh);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 9, obj.CheeksBoneWidth);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 10, obj.CheeksWidth);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 11, obj.EyesOpenning);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 12, obj.LipsThickness);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 13, obj.JawBoneWidth);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 14, obj.JawBoneBackLenght);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 15, obj.ChimpBoneLowering);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 16, obj.ChimpBoneLenght);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 17, obj.ChimpBoneWidth);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 18, obj.ChimpHole);
-            Function.Call(Hash._SET_PED_FACE_FEATURE, self, 19, obj.NeckThikness);
+            if (self.Model == PedHash.FreemodeFemale01 || self.Model == PedHash.FreemodeMale01)
+            {
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 0, obj.NoseWidth);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 1, obj.NosePeakHight);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 2, obj.NosePeakLenght);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 3, obj.NoseBoneHigh);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 4, obj.NosePeakLowering);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 5, obj.NoseBoneTwist);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 6, obj.EyeBrownHigh);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 7, obj.EyeBrownForward);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 8, obj.CheeksBoneHigh);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 9, obj.CheeksBoneWidth);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 10, obj.CheeksWidth);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 11, obj.EyesOpenning);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 12, obj.LipsThickness);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 13, obj.JawBoneWidth);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 14, obj.JawBoneBackLenght);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 15, obj.ChimpBoneLowering);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 16, obj.ChimpBoneLenght);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 17, obj.ChimpBoneWidth);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 18, obj.ChimpHole);
+                Function.Call(Hash._SET_PED_FACE_FEATURE, self, 19, obj.NeckThikness);
+            }
             #endregion
 
             #region Face
-            Function.Call(Hash.SET_PED_HEAD_BLEND_DATA, self,
-                obj.HeadShape1,
-                obj.HeadShape2,
-                obj.HeadShape3,
-                obj.HeadSkin1,
-                obj.HeadSkin2,
-                obj.HeadSkin3,
-                obj.HeadShapeMix,
-                obj.HeadSkinMix,
-                obj.ThirdMix,
-                false
-            );
+            if (self.Model == PedHash.FreemodeFemale01 || self.Model == PedHash.FreemodeMale01)
+            {
+                Function.Call(Hash.SET_PED_HEAD_BLEND_DATA, self,
+                    obj.HeadShape1,
+                    obj.HeadShape2,
+                    obj.HeadShape3,
+                    obj.HeadSkin1,
+                    obj.HeadSkin2,
+                    obj.HeadSkin3,
+                    obj.HeadShapeMix,
+                    obj.HeadSkinMix,
+                    obj.ThirdMix,
+                    false
+                );
+            }
 
             Function.Call(Hash._SET_PED_EYE_COLOR, self, obj.EyeColor);
             #endregion
@@ -149,5 +158,15 @@ namespace CitizenFX.Core
             #endregion
 
         }
+
+
+        public static async Task Save(this Ped self)
+        {
+            // save player to database
+
+
+
+        }
+
     }
 }

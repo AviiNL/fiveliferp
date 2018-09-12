@@ -615,19 +615,10 @@ namespace FiveLife.Client.CharacterCreator.Elements
 
         private async void PedSelector_OnListChanged(UIMenuListItem sender, UIMenuListItemItem item)
         {
-            SelectedItem = item.Value;
-            var model = new Model((PedHash)item.Value);
-            model.Request();
-            if (!model.IsValid) Debug.WriteLine($"Invalid Model: {item.Value}");
-            if (!model.IsLoaded)
-                await BaseScript.Delay(0);
-
-            await CitizenFX.Core.Game.Player.ChangeModel(model);
-            CitizenFX.Core.Game.Player.Character.Style.SetDefaultClothes();
-
-            this.parent.PedChange(CitizenFX.Core.Game.Player.Character);
-
-            model.MarkAsNoLongerNeeded();
+            Game.Data.Character = new Shared.Entity.Character();
+            Game.Data.Character.Player = Game.Data.Player;
+            Game.Data.Character.ModelHash = (uint)((PedHash)item.Value);
+            await CitizenFX.Core.Game.Player.Character.Apply(Game.Data.Character);
         }
     }
 }

@@ -1,10 +1,5 @@
 ﻿using CitizenFX.Core;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FiveLife.Database.SqLite
@@ -26,10 +21,10 @@ namespace FiveLife.Database.SqLite
             firstTick = false;
             Tick -= Connection_Tick;
 
-            await Connect();
+            Connect();
         }
 
-        internal static async Task Connect()
+        internal static void Connect()
         {
             if (context == null)
             {

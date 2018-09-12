@@ -28,8 +28,8 @@ namespace FiveLife.Shared.Entity
         public float Heading { get; set; }
 
         // Stats
-        public int Health { get; set; }
-        public int Armor { get; set; }
+        public int Health { get; set; } = 100;
+        public int Armor { get; set; } = 0;
         public int Stamina { get; set; }
         public int Stealth { get; set; }
         public int LungCapacity { get; set; }
@@ -111,14 +111,14 @@ namespace FiveLife.Shared.Entity
         public float NeckThikness { get; set; }
         // - MP Face Blend
         public int EyeColor { get; set; }
-        public int HeadShape1 { get; set; }
-        public int HeadSkin1 { get; set; }
-        public int HeadShape2 { get; set; }
-        public int HeadSkin2 { get; set; }
+        public int HeadShape1 { get; set; } = 21;
+        public int HeadSkin1 { get; set; } = 21;
+        public int HeadShape2 { get; set; } = 0;
+        public int HeadSkin2 { get; set; } = 0;
         public int HeadShape3 { get; set; }
         public int HeadSkin3 { get; set; }
-        public float HeadShapeMix { get; set; }
-        public float HeadSkinMix { get; set; }
+        public float HeadShapeMix { get; set; } = 0.5f;
+        public float HeadSkinMix { get; set; } = 0.5f;
         public float ThirdMix { get; set; }
         // - MP Overlay
         public int Blemishes { get; set; }

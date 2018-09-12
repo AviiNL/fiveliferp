@@ -1,11 +1,14 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import * as objectPath from 'object-path';
 import './style.scss';
 
 class IDForm extends Component {
 
-    constructor (props) {
+    constructor(props) {
         super(props);
+
+        console.log(JSON.stringify(this.props.data));
+
 
         this.state = this.props.data;
     }
@@ -21,22 +24,21 @@ class IDForm extends Component {
     handleDoB(key) {
         return (event) => {
 
+            console.log(event.target.value);
+
             let date = event.target.value.split('-');
-            let year = date.shift();
-            let month = date.shift();
-            let day = date.shift();
+            let year = parseInt(date.shift());
+            let month = parseInt(date.shift());
+            let day = parseInt(date.shift());
 
             let d = this.state;
-            objectPath.set(d, key + ".Year", year);
-            objectPath.set(d, key + ".Month", month);
-            objectPath.set(d, key + ".Day", day);
+
+            objectPath.set(d, key, new Date(year, month - 1, day + 1));
 
             objectPath.set(d, "Cash", 500);
             objectPath.set(d, "Bank", 500);
 
             this.setState(d);
-
-            console.log(this.state);
         }
     }
 
@@ -58,20 +60,14 @@ class IDForm extends Component {
                                 <h1>Identification</h1>
                                 <p>
                                     <label>
-                                        Social Security Number:
-                                        <input type={"text"} value={`${this.state.SSN.IOne}-${this.state.SSN.ITwo}-${this.state.SSN.IThree}`} readOnly/>
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
                                         First name:
-                                        <input type={"text"} value={this.state.Name.FirstName} onChange={this.handleChange("Name.FirstName").bind(this)}/>
+                                        <input type={"text"} value={this.state.FirstName} onChange={this.handleChange("FirstName").bind(this)} />
                                     </label>
                                 </p>
                                 <p>
                                     <label>
                                         Last name:
-                                        <input type={"text"} value={this.state.Name.LastName} onChange={this.handleChange("Name.LastName").bind(this)}/>
+                                        <input type={"text"} value={this.state.LastName} onChange={this.handleChange("LastName").bind(this)} />
                                     </label>
                                 </p>
                                 <p>
@@ -80,11 +76,11 @@ class IDForm extends Component {
                                         <input type={"date"} onBlur={this.handleDoB("DateOfBirth").bind(this)} />
                                     </label>
                                 </p>
-                                <p style={{float:"right"}}>
+                                <p style={{ float: "right" }}>
                                     <input type={"button"} onClick={this.onCancel.bind(this)} value={"Cancel"} />
                                     <input type={"button"} onClick={this.onSubmit.bind(this)} value={"Submit"} />
                                 </p>
-                                <div style={{clear:"both"}}>
+                                <div style={{ clear: "both" }}>
 
                                 </div>
                             </div>

@@ -38,7 +38,6 @@ namespace FiveLife.NativeUI
             set { _index = _items.Count == 0 ? 0 : (100000000 - (100000000 % _items.Count) + value); }
         }
 
-
         /// <summary>
         /// List item, with left/right arrows.
         /// </summary>
@@ -47,6 +46,17 @@ namespace FiveLife.NativeUI
         /// <param name="index">Index in the list. If unsure user 0.</param>
         public UIMenuListItem(string text)
             : this(text, new List<UIMenuListItemItem>(), 0, "")
+        {
+        }
+        
+        /// <summary>
+        /// List item, with left/right arrows.
+        /// </summary>
+        /// <param name="text">Item label.</param>
+        /// <param name="items">List that contains your items.</param>
+        /// <param name="index">Index in the list. If unsure user 0.</param>
+        public UIMenuListItem(string text, List<UIMenuListItemItem> items)
+            : this(text, items, 0, "")
         {
         }
 

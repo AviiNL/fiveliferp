@@ -858,7 +858,7 @@ namespace FiveLife.NativeUI
         public string AUDIO_BACK = "BACK";
         public string AUDIO_ERROR = "ERROR";
         
-        public List<UIMenuItem> MenuItems = new List<UIMenuItem>();
+        public List<UIMenuItem> MenuItems { get; private set; } = new List<UIMenuItem>();
 
         public bool MouseEdgeEnabled = true;
         public bool ControlDisablingEnabled = true;
@@ -901,7 +901,12 @@ namespace FiveLife.NativeUI
         public event MenuOpenEvent OnMenuOpen;
 
         /// <summary>
-        /// Called when user closes the menu or goes back in a menu chain.
+        /// Called when user closes goes back in a menu chain.
+        /// </summary>
+        public event MenuCloseEvent OnMenuBack;
+
+        /// <summary>
+        /// Called when user closes the menu.
         /// </summary>
         public event MenuCloseEvent OnMenuClose;
 
@@ -922,7 +927,7 @@ namespace FiveLife.NativeUI
         /// </summary>
         /// <param name="title">Title that appears on the big banner.</param>
         /// <param name="subtitle">Subtitle that appears in capital letters in a small black bar.</param>
-        public UIMenu(string title, string subtitle) : this(title, subtitle, new PointF(0, 0), "commonmenu", "interaction_bgd")
+        public UIMenu(string title, string subtitle) : this(title, subtitle, new PointF(0, -107), "commonmenu", "interaction_bgd")
         {
         }
 
@@ -1273,19 +1278,19 @@ namespace FiveLife.NativeUI
                 safe = new PointF(0, 0);
             }
 
-            if (String.IsNullOrWhiteSpace(_customBanner))
-            {
-                if (_logo != null)
-                    _logo.Draw();
-                else
-                {
-                    _tmpRectangle?.Draw();
-                }
-            }
-            else
-            {
-                //Sprite.DrawTexture(_customBanner, new PointF(safe.X + _offset.X, safe.Y + _offset.Y), new SizeF(431 + WidthOffset, 107));
-            }
+            //if (String.IsNullOrWhiteSpace(_customBanner))
+            //{
+            //    if (_logo != null)
+            //        _logo.Draw();
+            //    else
+            //    {
+            //        _tmpRectangle?.Draw();
+            //    }
+            //}
+            //else
+            //{
+            //    //Sprite.DrawTexture(_customBanner, new PointF(safe.X + _offset.X, safe.Y + _offset.Y), new SizeF(431 + WidthOffset, 107));
+            //}
             _mainMenu.Draw();
             if (MenuItems.Count == 0)
             {
@@ -1630,7 +1635,7 @@ namespace FiveLife.NativeUI
             {
                 ParentMenu.Visible = true;
             }
-            MenuCloseEv();
+            MenuBackEv();
         }
 
         public void Close()
@@ -2176,7 +2181,15 @@ namespace FiveLife.NativeUI
         {
             OnCheckboxChange?.Invoke(this, sender, Checked);
         }
-        
+
+        public virtual void OnActivated() { }
+
+
+        protected virtual void MenuBackEv()
+        {
+            OnMenuBack?.Invoke(this);
+        }
+
         protected virtual void MenuCloseEv()
         {
             OnMenuClose?.Invoke(this);

@@ -76,6 +76,8 @@
     <Compile Include="CharacterCreator\Elements\FaceTextureList.cs" />
     <Compile Include="CharacterCreator\Elements\PedList.cs" />
     <Compile Include="CharacterCreator\Menu\CustomizeMenu.cs" />
+    <Compile Include="CharacterCreator\Menu\Freemode\ClothingMenu.cs" />
+    <Compile Include="CharacterCreator\Menu\Freemode\HeritageMenu.cs" />
     <Compile Include="CharacterCreator\Menu\MainMenu.cs" />
     <Compile Include="CharacterCreator\Menu\Menu.cs" />
     <Compile Include="Chat\CommandHandler.cs" />
