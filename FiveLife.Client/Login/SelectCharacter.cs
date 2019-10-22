@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using CitizenFX.Core.UI;
+using FiveLife.Client.Database;
 using FiveLife.NativeUI;
 using FiveLife.Shared.Entity;
 using Newtonsoft.Json;
+using Player = FiveLife.Shared.Entity.Player;
 
 namespace FiveLife.Client.Login
 {
@@ -34,10 +36,32 @@ namespace FiveLife.Client.Login
             API.RegisterNuiCallbackType("character_finished");
             EventHandlers.Add("__cfx_nui:character_finished", new Action<ExpandoObject>(CharacterFinished));
 
+            API.RegisterNuiCallbackType("character_cancel");
+            EventHandlers.Add("__cfx_nui:character_cancel", new Action<ExpandoObject>(CharacterCancel));
+
+            RegisterEvent("fivelive.character.selection.open", async () =>
+            {
+                characterCreator.Close();
+                await Show();
+            });
+
             API.ShutdownLoadingScreenNui();
             API.ShutdownLoadingScreen();
 
             // characterCreator.OnFinished += 
+
+            await Show();
+        }
+
+        public async Task Show()
+        {
+            // do cleanup =p
+            foreach (var k in peds)
+            {
+                k.Key.Delete();
+                k.Key.Model.MarkAsNoLongerNeeded();
+            }
+            peds.Clear();
 
             await CitizenFX.Core.Game.Player.SetModel(PedHash.Michael);
             await CitizenFX.Core.Game.Player.Spawn(pos, 23, false);
@@ -48,7 +72,6 @@ namespace FiveLife.Client.Login
             while (Screen.Fading.IsFadingIn)
                 await Delay(0);
 
-            Debug.WriteLine($"Characters: {Game.Data.Player.Characters.Count}");
             if (Game.Data.Player.Characters.Count == 0)
             {
                 await characterCreator.Start();
@@ -85,12 +108,22 @@ namespace FiveLife.Client.Login
 
         }
 
+        private async void CharacterCancel(dynamic _data)
+        {
+            Debug.Write("Closed!");
+            Screen.Effects.Stop(ScreenEffect.SwitchHudIn);
+            NUI.Close();
+            API.SetNuiFocus(false, false);
+        }
+
         private async void CharacterFinished(dynamic _data)
         {
             var data = JsonConvert.SerializeObject(_data);
             var character = JsonConvert.DeserializeObject<Character>(data) as Character;
 
             // upload character data to server
+            character.PlayerId = Repository<Player>.GetBySource().Id; // make sure the playerid is correct.
+            await Repository<Character>.Insert(character);
             characterCreator.Close();
 
             // Get ingame
@@ -98,7 +131,7 @@ namespace FiveLife.Client.Login
 
         }
 
-            public void UpdateScaleform()
+        public void UpdateScaleform()
         {
             _instructionalButtonsScaleform.CallFunction("CLEAR_ALL");
             _instructionalButtonsScaleform.CallFunction("TOGGLE_MOUSE_BUTTONS", 0);
@@ -127,7 +160,7 @@ namespace FiveLife.Client.Login
 
             NUI.Close();
 
-            if(cam != null)
+            if (cam != null)
                 cam.Enabled = false;
 
             IsCharacterSelectionActive = false;
@@ -197,7 +230,7 @@ namespace FiveLife.Client.Login
                 ped.Key.Position = offset;
 
                 var textPos = new Vector3(offset.X, offset.Y, offset.Z + 1.65f);
-                Draw($"{ped.Value.FirstName} {ped.Value.FirstName}", System.Drawing.Color.FromArgb(255, 255, 255, 255), textPos, 1, true, 4);
+                Draw($"{ped.Value.FirstName} {ped.Value.LastName}", System.Drawing.Color.FromArgb(255, 255, 255, 255), textPos, 1, true, 4);
 
                 var a = new Vector2(cam.Position.X, cam.Position.Y);
                 var b = new Vector2(offset.X, offset.Y);

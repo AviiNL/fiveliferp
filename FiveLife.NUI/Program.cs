@@ -20,7 +20,7 @@ namespace FiveLife.NUI
         static void Main(string[] args)
         {
             YarnBuild();
-
+            
             var Resource = new ResourceGenerator();
 
             Resource.resource_manifest_version = "05cfa83c-a124-4cfa-a768-c24a5811d8f9";

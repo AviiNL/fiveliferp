@@ -91,6 +91,8 @@
     <Compile Include="Extension\PlayerExtension.cs" />
     <Compile Include="Chat\Chat.cs" />
     <Compile Include="Extension\SyncHandler.cs" />
+    <Compile Include="Game\Animation\Handsup.cs" />
+    <Compile Include="Game\Animation\Point.cs" />
     <Compile Include="Game\Data.cs" />
     <Compile Include="Game\ELS\Config.cs" />
     <Compile Include="Game\ELS\ELS.cs" />
@@ -103,7 +105,10 @@
     <Compile Include="Game\Rooms\RoomHandler.cs" />
     <Compile Include="Game\Spawn.cs" />
     <Compile Include="Game\Tweaks.cs" />
+    <Compile Include="Game\UI\Location.cs" />
+    <Compile Include="Game\UI\Speedometer.cs" />
     <Compile Include="Game\UI\Subtitle.cs" />
+    <Compile Include="Game\UI\Voip.cs" />
     <Compile Include="Login\SelectCharacter.cs" />
     <Compile Include="NUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

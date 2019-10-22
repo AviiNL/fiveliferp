@@ -122,9 +122,7 @@ namespace FiveLife.Client.Chat
 
         private void AdjustWeather(int arg1, List<object> arg2, string arg3)
         {
-
-            World.TransitionToWeather(World.NextWeather, 2);
-
+            World.TransitionToWeather(Weather.Clear, 2);
         }
 
         private void Extra(int arg1, List<object> arg2, string arg3)
@@ -251,13 +249,13 @@ namespace FiveLife.Client.Chat
 
         private void Pos()
         {
-            Debug.WriteLine("{0}", $"Current Position: {CitizenFX.Core.Game.Player.Character.Position.ToString()}");
-            Debug.WriteLine("{0}", $"Current Heading : {CitizenFX.Core.Game.Player.Character.Heading}");
+            Debug.WriteLine("{0}", $"CHR Current Position: {CitizenFX.Core.Game.Player.Character.Position.ToString()}");
+            Debug.WriteLine("{0}", $"CHR Current Heading : {CitizenFX.Core.Game.Player.Character.Heading}");
 
             var Position = Function.Call<Vector3>(Hash.GET_GAMEPLAY_CAM_COORD);
             var Rotation = Function.Call<Vector3>(Hash.GET_GAMEPLAY_CAM_ROT, 2);
-            Debug.WriteLine("{0}", $"Current Position: {Position}");
-            Debug.WriteLine("{0}", $"Current Heading : {Rotation}");
+            Debug.WriteLine("{0}", $"CAM Current Position: {Position}");
+            Debug.WriteLine("{0}", $"CAM Current Heading : {Rotation}");
 
         }
 

@@ -30,7 +30,7 @@ namespace FiveLife.Client.CharacterCreator
         //private Vector3 FaceCameraRotation = new Vector3(x: 0f, y: 0, z: 25.83904f);
         //private float FaceCameraFieldOfView = 10;
 
-        private Vector3 PlayerPosition = new Vector3(x: 454.2021f, y: -988.5843f, z: 31.38958f);
+        private Vector3 PlayerPosition = new Vector3(x: 454.2021f, y: -988.5843f, z: 30.38958f);
         private float PlayerHeading = 207.0087f;
 
         //private Vector3 lookat = new Vector3(x: 456.6599f, y: -987.7852f, z: 31.39453f);

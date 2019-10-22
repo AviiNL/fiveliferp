@@ -552,8 +552,7 @@ namespace FiveLife.Client.Game.ELS
 
             if (els_Vehicles.ContainsKey(checkCarHash(vehId)))
             {
-                if ((API.GetPedInVehicleSeat(vehId, -1) == API.GetPlayerPed(-1)) ||
-                    (API.GetPedInVehicleSeat(vehId, 0) == API.GetPlayerPed(-1)))
+                if ((API.GetPedInVehicleSeat(vehId, -1) == API.GetPlayerPed(-1)))
                 {
                     if (API.GetVehicleClass(vehId) == 18)
                     {
@@ -1299,7 +1298,7 @@ namespace FiveLife.Client.Game.ELS
 
             if (!guiEnabled || !els_Vehicles.ContainsKey(vehN)) return;
 
-            if (API.GetPedInVehicleSeat(veh, -1) == API.GetPlayerPed(-1) || API.GetPedInVehicleSeat(veh, 0) == API.GetPlayerPed(-1))
+            if (API.GetPedInVehicleSeat(veh, -1) == API.GetPlayerPed(-1))
             {
 
                 API.DrawRect(0.85f, 0.91f, 0.24f, 0.11f, 0, 0, 0, 200);
@@ -1580,6 +1579,7 @@ namespace FiveLife.Client.Game.ELS
         private void OnChangePrimaryPattern(int senderId, int pat)
         {
             var player = new CitizenFX.Core.PlayerList()[senderId];
+            if (player == null) return;
             var ped = player.Character;
             if (ped.Exists() && !ped.IsDead && API.IsPedInAnyVehicle(ped.Handle, false))
             {
@@ -1599,6 +1599,7 @@ namespace FiveLife.Client.Game.ELS
         private void OnChangeSecondaryPattern(int senderId, int pat)
         {
             var player = new CitizenFX.Core.PlayerList()[senderId];
+            if (player == null) return;
             var ped = player.Character;
             if (ped.Exists() && !ped.IsDead && API.IsPedInAnyVehicle(ped.Handle, false))
             {
@@ -1618,6 +1619,7 @@ namespace FiveLife.Client.Game.ELS
         private void OnChangeAdvisorPattern(int senderId, int pat)
         {
             var player = new CitizenFX.Core.PlayerList()[senderId];
+            if (player == null) return;
             var ped = player.Character;
             if (ped.Exists() && !ped.IsDead && API.IsPedInAnyVehicle(ped.Handle, false))
             {
@@ -1648,6 +1650,7 @@ namespace FiveLife.Client.Game.ELS
         private void OnSetDualSiren(int senderId, bool state)
         {
             var player = new CitizenFX.Core.PlayerList()[senderId];
+            if (player == null) return;
             var ped = player.Character;
             if (ped.Exists() && !ped.IsDead && API.IsPedInAnyVehicle(ped.Handle, false))
             {
@@ -1659,6 +1662,7 @@ namespace FiveLife.Client.Game.ELS
         private void OnSetDualSirenState(int senderId, int state)
         {
             var player = new CitizenFX.Core.PlayerList()[senderId];
+            if (player == null) return;
             var ped = player.Character;
             if (ped.Exists() && !ped.IsDead && API.IsPedInAnyVehicle(ped.Handle, false))
             {
@@ -1670,6 +1674,7 @@ namespace FiveLife.Client.Game.ELS
         private void OnSetHornState(int senderId, int state)
         {
             var player = new CitizenFX.Core.PlayerList()[senderId];
+            if (player == null) return;
             var ped = player.Character;
             if (ped.Exists() && !ped.IsDead && API.IsPedInAnyVehicle(ped.Handle, false))
             {
@@ -1681,6 +1686,7 @@ namespace FiveLife.Client.Game.ELS
         private void OnSetTakedownState(int senderId, int state)
         {
             var player = new CitizenFX.Core.PlayerList()[senderId];
+            if (player == null) return;
             var ped = player.Character;
             if (ped.Exists() && !ped.IsDead && API.IsPedInAnyVehicle(ped.Handle, false))
             {

@@ -91,6 +91,9 @@
     <Content Include="Extra\vcf\Patrol Vehicle VCFs\POLICE5.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Extra\vcf\Patrol Vehicle VCFs\POLICEb.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Extra\vcf\Patrol Vehicle VCFs\SHERIFF2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -9,7 +9,11 @@ namespace FiveLife.Shared.Entity
     public class Player : IEntity
     {
         public int Id { get; set; }
-        public string SteamId { get; set; }
+        public string SteamId { get {
+                return "steam:" + SteamId64.ToString("X").ToLower();
+            }
+        }
+        public long SteamId64 { get; set; }
         public virtual List<Character> Characters { get; set; }
         public ERank Rank { get; set; }
         public int Priority { get; set; }

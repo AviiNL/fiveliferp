@@ -37,6 +37,14 @@ namespace FiveLife.Client.CharacterCreator.Menu
 
         private void Cancel_Activated(UIMenu sender, UIMenuItem selectedItem)
         {
+            if(Game.Data.Player.Characters.Count > 0)
+            {
+                menu.Close();
+                Visible = false;
+                FiveLifeScript.TriggerEvent("fivelive.character.selection.open");
+                return;
+            }
+
             if (!Visible) return;
             Function.Call(Hash.ACTIVATE_FRONTEND_MENU, -1171018317, 0, 42);
         }
@@ -47,8 +55,6 @@ namespace FiveLife.Client.CharacterCreator.Menu
 
             Screen.Effects.Start(ScreenEffect.SwitchHudIn, 0, false);
             NUI.Open(NUI.Page.IDForm, Game.Data.Character);
-
-            // open NUI set name and stuff
         }
 
         private void Customize_Activated(UIMenu sender, UIMenuItem selectedItem)

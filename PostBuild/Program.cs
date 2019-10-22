@@ -48,6 +48,7 @@ namespace PostBuild
                 Directory.CreateDirectory(destDir.FullName);
 
                 File.Copy(file, dest, true);
+                Console.WriteLine("Copying " + file);
             }
 
             if(File.Exists(@"D:\FiveM\Server\server-data\resources\[FiveLife]\fivelife\\CitizenFX.Core.dll"))

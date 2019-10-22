@@ -64,6 +64,8 @@ namespace CitizenFX.Core
             self.SetStat("STRENGTH", obj.Strength);
             self.SetStat("WHEELIE_ABILITY", obj.Wheelie);
 
+            Debug.WriteLine("Spawning at " + new Vector3(obj.X, obj.Y, obj.Z).ToString());
+
             await self.Spawn(new Vector3(obj.X, obj.Y, obj.Z), obj.Heading, true);
         }
 
@@ -101,7 +103,7 @@ namespace CitizenFX.Core
 
             spawnLock = true;
 
-            self.Freeze(true);
+            //self.Freeze(true);
 
             var ped = self.Character;
 
@@ -126,8 +128,8 @@ namespace CitizenFX.Core
 
             Function.Call(Hash.CLEAR_PLAYER_WANTED_LEVEL, self);
 
-            self.Freeze(false);
-            
+            //self.Freeze(false);
+            Debug.WriteLine("Spawned...");
             spawnLock = false;
         }
 

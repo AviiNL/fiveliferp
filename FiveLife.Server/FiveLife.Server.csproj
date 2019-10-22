@@ -74,6 +74,7 @@
     <Compile Include="Chat\Commands\AllowAccess.cs" />
     <Compile Include="Chat\Commands\AllowEntry.cs" />
     <Compile Include="Chat\Commands\DenyEntry.cs" />
+    <Compile Include="Chat\Commands\Emote.cs" />
     <Compile Include="Chat\Commands\GOOC.cs" />
     <Compile Include="Chat\Commands\Me.cs" />
     <Compile Include="Chat\Commands\OOC.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Chat\Commands\ChatCommand.cs" />
     <Compile Include="Connection\Queue.cs" />
     <Compile Include="Connection\Whitelist.cs" />
+    <Compile Include="Converter.cs" />
     <Compile Include="FiveLifeScript.cs" />
     <Compile Include="MicrosecondEpochConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

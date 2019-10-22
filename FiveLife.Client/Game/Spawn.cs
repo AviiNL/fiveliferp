@@ -64,6 +64,7 @@ namespace FiveLife.Client.Game
                 CitizenFX.Core.Game.DisableAllControlsThisFrame(2);
             }
 
+
              // This should totally not be in Spawn....
             // Ingame UI
             if (gameEntered)

@@ -13,8 +13,6 @@ namespace FiveLife.Client.Database
     {
         private static EventHandlerDictionary EventHandlers;
 
-        
-
         public static void Init(EventHandlerDictionary events)
         {
             if (EventHandlers != null) return;
